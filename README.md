@@ -8,8 +8,11 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 
 
 ## Hardware
-![Wiring](hardware/temp2iot_wiring.png)
 
+### BOM
+* WeMos D1 mini
+* DS18B20
+* Resistor 4K7 (1/4 W) 
 
 <p align="center">
   <img src="hardware/temp2iot_wiring.png" alt="Temp2IoT wiring" />
