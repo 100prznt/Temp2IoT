@@ -10,4 +10,7 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 ## Hardware
 ![Wiring](hardware/temp2iot_wiring.png)
 
-<img align="center" src="hardware/temp2iot_wiring.png" alt="Temp2IoT wiring">
+
+<p align="center">
+  <img src="hardware/temp2iot_wiring.png" alt="Temp2IoT wiring" />
+</p>
