@@ -5,3 +5,7 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 * Temperature measurement at two measuring points using DS18B20 sensors
 * Shows the measured values on integrated Web UI
 * REST API for integration with master systems
+
+
+## Hardware
+![Wiring](hardware/temp2iot_wiring.png)
