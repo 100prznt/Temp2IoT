@@ -1,2 +1,7 @@
 # Temp2IoT
-Very basic (KISS) IoT thermometer with REST API and Web-UI
+Very basic IoT thermometer with REST API and Web-UI. Implemented according to the "KISS" approach - **K**eep **I**t **S**imple and **S**tupid
+
+## Features
+* Temperature measurement at two measuring points using DS18B20 sensors
+* Shows the measured values on integrated Web UI
+* REST API for integration with master systems
