@@ -18,6 +18,11 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
   <img src="hardware/temp2iot_wiring.png" alt="Temp2IoT wiring" />
 </p>
 
+<p align="center">
+  <img src="hardware/hardware_raw.jpg" alt="Temp2IoT minimal build up" />
+</p>
+Minimal build up, with SMD resistor on the back.
+
 ## REST API
 URL: `http://<Temp2IoT IP>/temp`
 Method: `GET`
