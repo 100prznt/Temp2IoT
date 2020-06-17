@@ -17,3 +17,15 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 <p align="center">
   <img src="hardware/temp2iot_wiring.png" alt="Temp2IoT wiring" />
 </p>
+
+## REST API
+URL: `<Temp2IoT IP>/temp`
+
+```
+{
+  "secure_counter": 3,
+  "symbol": "°C",
+  "temperature": "25.63",
+  "unit": "Celsius"
+}
+```
