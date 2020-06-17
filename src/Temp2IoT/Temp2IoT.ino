@@ -75,6 +75,8 @@ void config_rest_server_routing() {
             "<!DOCTYPE html><html><head><title>Temp2IoT</title></head><body><h2>Welcome to the Temp2IoT Web Server</h2><p>Refer to the <a href=\"/temp\">REST API</a>, to show the current temperature.</p><p>Find project details on GitHub <a href=\"https://github.com/100prznt/Temp2IoT/\" target=\"_blank\">100prznt/Temp2IoT/</a></p></body></htm>");
     });
     http_rest_server.on("/temp", HTTP_GET, getTemperature);
+
+    http_rest_server.on("/css/uikit.min.css", HTTP_GET, get_uikitcss);
 }
 
 void setup(void) {
