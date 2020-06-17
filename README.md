@@ -19,7 +19,8 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 </p>
 
 ## REST API
-URL: `<Temp2IoT IP>/temp`
+URL: `http://<Temp2IoT IP>/temp`
+Method: `GET`
 
 ```
 {
