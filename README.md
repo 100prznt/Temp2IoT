@@ -33,10 +33,6 @@ Also a USB-micro cable and a USB power supply is required
 
 ![Temp2IoT minimal build up](hardware/hardware_raw.jpg)
 Minimal build up with SMD resistor on the back
-  <br>
-  <br>
-![Temp2IoT Logo-Case](hardware/temp2iot_logo_case.jpg)
-3d-printed enclosure with the Temp2IoT icon
 
 ## Setup
 1. Clone or download the repository
@@ -71,3 +67,16 @@ Web UI on a desktop browser
   <br>
 ![Web UI on a smartphone browser](docu/webui_smartphone.png)
 Web UI on a smartphone browser
+
+
+## Enclosure
+In the folder [hardware/enclosure](hardware/enclosure) you will find 2 STL files of a suitable enclosure. If the cover is printed upside-down, you can print the first two layers in a different color to make the Temp2IoT icon stand out better.
+
+## Photos
+
+![3d-printed enclousure with Temp2IoT icon](hardware/temp2iot_logo_case.jpg)
+3d-printed enclousure with Temp2IoT icon
+  <br>
+  <br>
+![3d-printed enclousure open](hardware/temp2iot_logo_case_open.jpg)
+Blackened inside so that the LED produces a focused light spot
