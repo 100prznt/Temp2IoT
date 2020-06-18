@@ -53,11 +53,12 @@ Minimal build up with SMD resistor on the back
 
 ## Web UI
 * URL: `http://<Temp2IoT IP>/`
-<br>
-<br>
+  <br>
+  <br>
 ![Web UI on a desktop browser](docu/webui_desktop.png)
 Web UI on a desktop browser
-<br>
-<br>
+  <br>
+  <br>
+  <br>
 ![Web UI on a smartphone browser](docu/webui_smartphone.png)
 Web UI on a smartphone browser
