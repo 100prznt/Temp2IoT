@@ -23,6 +23,14 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 </p>
 Minimal build up, with SMD resistor on the back.
 
+## Setup
+1. Clone or download the repository
+2. Put your credentials in the `src\Temp2IoT\WifiCredentials.h.template` file and rename the file to `WifiCredentials.h`
+3. Open the `src\Temp2IoT\Temp2IoT.ino` with the Arduino IDE
+4. Compile and upload
+5. Open the serial monitor (in Arduino IDE) to see the WiFi status and the applied IP address
+
+
 ## REST API
 * URL: `http://<Temp2IoT IP>/api`
 * Method: `GET`
@@ -37,6 +45,7 @@ Minimal build up, with SMD resistor on the back.
 ```
 
 ## Web UI
+* URL: `http://<Temp2IoT IP>/`
 
 ![Web UI on a desktop browser](docu/webui_desktop.png)
 Web UI on a desktop browser
