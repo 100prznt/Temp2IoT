@@ -13,7 +13,7 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 
 ### BOM
 
-| Description          | Qty. | Price*    | ASIN (partner-link from amazon.de)    |
+| Description          | Qty. | Price    | ASIN (partner-link from amazon.de)    |
 |----------------------|------|----------:|---------------------------------------|
 | WeMos D1 mini        | 1    | EUR 5,99  | [B076FBY2V3](https://amzn.to/30WTQI6) |
 | DS18B20 waterproof   | 1    | EUR 2,65  | [B07THK58HZ](https://amzn.to/30WTQI6) |
@@ -21,18 +21,18 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 |----------------------|------|-----------|---------------------------------------|
 | Total                |      | EUR 10,32 |                                       |
 
-* *) Quoted prices from 2020/06/18*
+*quoted prices from 2020/06/18*
+
+Also a USB-micro cable and a USB power supply is required
 
 ### Wiring
 
 ![Temp2IoT wiring](hardware/temp2iot_wiring.png)
-Wiring scheme
 
 ### Photos
 
 ![Temp2IoT minimal build up](hardware/hardware_raw.jpg)
 Minimal build up with SMD resistor on the back
-  <br>
   <br>
   <br>
 ![Temp2IoT Logo-Case](hardware/temp2iot_logo_case.jpg)
