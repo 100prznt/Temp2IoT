@@ -21,8 +21,10 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 Wiring scheme
     
     
+    
 ![Temp2IoT minimal build up](hardware/hardware_raw.jpg)
 Minimal build up with SMD resistor on the back
+    
     
     
 ![Temp2IoT Logo-Case](hardware/temp2iot_logo_case.jpg)
@@ -53,8 +55,10 @@ Minimal build up with SMD resistor on the back
 * URL: `http://<Temp2IoT IP>/`
     
     
+    
 ![Web UI on a desktop browser](docu/webui_desktop.png)
 Web UI on a desktop browser
+    
     
     
 ![Web UI on a smartphone browser](docu/webui_smartphone.png)
