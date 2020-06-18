@@ -35,6 +35,10 @@ Also a USB-micro cable and a USB power supply is required
 Minimal build up with SMD resistor on the back
 
 ## Setup
+
+Wenn bisher noch keine WeMos D1 mini mit der Arduino IDE programmiert wurden ist zuerst eine entsprechende Einrichtung erforderlich.
+* (Wiki - Setup Arduino IDE for WeMos D1 mini)[https://github.com/100prznt/Temp2IoT/wiki/Setup-Arduino-IDE]
+
 1. Clone or download the repository
 2. Put your credentials in the `src\Temp2IoT\WifiCredentials.h.template` file and rename the file to `WifiCredentials.h`
 3. Open the `src\Temp2IoT\Temp2IoT.ino` with the Arduino IDE
