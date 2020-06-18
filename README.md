@@ -2,7 +2,7 @@
 Very basic IoT thermometer with REST API and Web-UI. Implemented according to the "KISS" approach - **K**eep **I**t **S**imple and **S**tupid
 
 ## Features
-* Temperature measurement at two measuring points using DS18B20 sensors
+* Temperature measurement at one measuring points using a DS18B20 sensor
 * Shows the measured values on integrated Web UI
 * REST API for integration with master systems
 
@@ -24,8 +24,8 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 Minimal build up, with SMD resistor on the back.
 
 ## REST API
-URL: `http://<Temp2IoT IP>/temp`
-Method: `GET`
+* URL: `http://<Temp2IoT IP>/api`
+* Method: `GET`
 
 ```
 {
@@ -35,3 +35,11 @@ Method: `GET`
   "unit": "Celsius"
 }
 ```
+
+## Web UI
+
+![Web UI on a desktop browser](docu/webui_desktop.png)
+Web UI on a desktop browser
+
+![Web UI on a smartphone browser](docu/webui_smartphone.png)
+Web UI on a smartphone browser
