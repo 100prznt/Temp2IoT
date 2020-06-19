@@ -76,7 +76,7 @@ Web UI on a smartphone browser
 ## Enclosure
 In the folder [hardware/enclosure](hardware/enclosure) you will find 2 STL files of a suitable enclosure. If the cover is printed upside-down, you can print the first two layers in a different color to make the Temp2IoT icon stand out better.
 
-## Photos
+### Photos
 
 ![3d-printed enclousure with Temp2IoT icon](hardware/temp2iot_logo_case.jpg)
 3d-printed enclousure with Temp2IoT icon
