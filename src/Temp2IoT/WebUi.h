@@ -1,3 +1,4 @@
+String web_ui_html = R"rawliteral(
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -136,3 +137,4 @@
   }, 10000 ) ;
   </script>
 </html>
+)rawliteral";
