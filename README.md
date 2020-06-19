@@ -16,8 +16,8 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 | Description          | Qty. | Price    | ASIN (partner-link from amazon.de)    |
 |----------------------|------|----------:|---------------------------------------|
 | WeMos D1 mini        | 1    | EUR 5,99  | [B076FBY2V3](https://amzn.to/30WTQI6) |
-| DS18B20 waterproof   | 1    | EUR 2,65  | [B07THK58HZ](https://amzn.to/30WTQI6) |
-| Resistor 4K7 (1/4 W) | 1    | EUR 1,68  | [B01LXS3YX2](https://amzn.to/30WTQI6) |
+| DS18B20 waterproof   | 1    | EUR 2,65  | [B07THK58HZ](https://amzn.to/3hI4hVM) |
+| Resistor 4K7 (1/4 W) | 1    | EUR 1,68  | [B01LXS3YX2](https://amzn.to/2YRddje) |
 |----------------------|------|-----------|---------------------------------------|
 | Total                |      | EUR 10,32 |                                       |
 
