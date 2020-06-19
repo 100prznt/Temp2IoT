@@ -74,8 +74,8 @@ void getApi() {
 void getIndex() {
     readTemperature();
     String html = web_ui_html;
-    html.replace("%TEMPERATURE%", String(TemperatureStr));
-    html.replace("%SECURECOUNTER%", String(SecureCounter));
+    html.replace("%T%", String(TemperatureStr));
+    html.replace("%SC%", String(SecureCounter));
     http_rest_server.send(200, "text/html", html);
 }
 
