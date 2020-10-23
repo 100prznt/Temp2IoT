@@ -37,6 +37,7 @@ int init_wifi() {
 }
 
 void readTemperature() {
+    Serial.println("Reading");
     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
     float temp;
     int cnt = 3; //retry counter
