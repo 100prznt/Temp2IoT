@@ -21,7 +21,7 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 |----------------------|------|-----------|---------------------------------------|
 | Total                |      | EUR 11,77 |                                       |
 
-*quoted prices from 2020/06/18*
+*quoted prices from 2021/02/10*
 
 Also a USB-micro cable and a USB power supply is required
 
