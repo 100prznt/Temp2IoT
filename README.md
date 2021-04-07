@@ -29,6 +29,13 @@ Also a USB-micro cable and a USB power supply is required
 
 ![Temp2IoT wiring](hardware/temp2iot_wiring.png)
 
+### Power Supply
+:warning: Caution Danger to life :warning:
+If the thermometer is used to measure water temperatures, it is essential to use an appropriately classified power supply unit. It is important that the power supply is designed as a safety transformer.
+
+<img src="docu/Sitrenn.svg" alt="Temp2IoT wiring" width="64" height="64" />
+Symbol of a short-circuit proof, closed safety transformer 
+
 ### Photos
 
 ![Temp2IoT minimal build up](hardware/hardware_raw.jpg)
