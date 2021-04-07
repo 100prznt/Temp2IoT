@@ -36,7 +36,7 @@ Minimal build up with SMD resistor on the back
 
 ## Setup
 
-Wenn bisher noch keine WeMos D1 mini mit der Arduino IDE programmiert wurden ist zuerst eine entsprechende Einrichtung erforderlich.
+If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropriate setup is required first.
 * [Wiki - Setup Arduino IDE for WeMos D1 mini](https://github.com/100prznt/Temp2IoT/wiki/Setup-Arduino-IDE)
 
 1. Clone or download the repository
