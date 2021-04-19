@@ -16,10 +16,8 @@ Im Vergleich zu einen außenliegenden Anlegefühler erreicht man mit der Tauchh�
 ## BOM
 
 | Description           | Qty. | Price     | ASIN (partner-link from amazon.de)     |
-|-----------------------|------|----------:|----------------------------------------|
+|:----------------------|:-----|----------:|:---------------------------------------|
 | Tauchhülse 1/2" 50 mm | 1    | EUR 10,99 | [ B07DXFWV6B](https://amzn.to/3eissJy) |
-|-----------------------|------|-----------|----------------------------------------|
-| Total                 |      | EUR 10,99 |                                        |
 
 *quoted prices from 2021/04/19*
 
