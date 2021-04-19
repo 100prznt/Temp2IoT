@@ -1,4 +1,4 @@
-<img src="https://github.com/100prznt/Temp2IoT/docu/Temp2IoT_Icon_Black.svg" alt="Temp2IoT wiring" width="64" height="64" />
+<img src="../Temp2IoT_Icon_Black.svg" alt="Temp2IoT wiring" width="64" height="64" />
 
 # Temp2IoT
 Very basic IoT thermometer with REST API and Web-UI. Implemented according to the "KISS" approach - **K**eep **I**t **S**imple and **S**tupid
