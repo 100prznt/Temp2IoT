@@ -26,7 +26,7 @@ Im Vergleich zu einen außenliegenden Anlegefühler erreicht man mit der Tauchh�
 ## Photos
 
 
-![Im T-Stück eingesetzte Tauchhülse mit 1/2" Gewinde](th_1-2_50mm_pvc_innerview.jpg)
+![Im T-Stück eingesetzte Tauchhülse mit 1/2" Gewinde](th_1-2_50mm_pvc_outerview.jpg)
 Im T-Stück eingesetzte Tauchhülse mit 1/2" Gewinde
   <br>
   <br>
