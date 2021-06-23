@@ -39,7 +39,16 @@
 			"file": "Temp2IoT_v2.ino",
 			"settings":
 			{
-				"buffer_size": 11502,
+				"buffer_size": 14017,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "config.h",
+			"settings":
+			{
+				"buffer_size": 3277,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -48,7 +57,7 @@
 			"file": "index.h",
 			"settings":
 			{
-				"buffer_size": 265,
+				"buffer_size": 644,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -86,10 +95,12 @@
 	},
 	"expanded_folders":
 	[
-		"/D/Projects/GitHub/Temp2IoT/src/Temp2IoT_v2"
+		"/C/dev/Projekte_Git/Temp2IoT/src/Temp2IoT_v2"
 	],
 	"file_history":
 	[
+		"//bosch.com/dfsrb/DfsDE/LOC/Eh/PS/TEF/70_Cooperation/COS/03_xPS_COS_PAV/PAV_HPS/HPS5/Abgleichvorschrift_HPS5_0_50bar_0261P04802_V03.xml",
+		"/C/work/20210623_HPS_50bar_Problem/Sensor210623603088.csv",
 		"/C/Temp/sdfdfs.c",
 		"/D/Projects/GitHub/Temp2IoT/src/Temp2IoT_v2/index.h",
 		"/D/Projects/GitHub/Rca.Pool.Chemistry/Rca.Pool.Chemistry.Php/Constants.php",
@@ -215,13 +226,11 @@
 		"/C/pmcu2005/SYSTEMCONFIG/TestPlanActual.xml",
 		"/C/pmcu2005/WP2/init.scpi",
 		"/C/pmcu2005/WP2/lsrd.scpi",
-		"/C/pmcu2005/WP2/impedance.scpi",
-		"/C/pmcu2005/WP2/Wp2TestPointAssignmentNioBits.xml",
-		"/C/privat/RCE/HP21/notes.md"
+		"/C/pmcu2005/WP2/impedance.scpi"
 	],
 	"find":
 	{
-		"height": 27.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -232,9 +241,12 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"analog",
+			"analog_error",
+			"analogerror",
 			"toggleTemps",
 			"tempCnt",
 			"OutputData",
@@ -320,24 +332,25 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11502,
+						"buffer_size": 14017,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2699,
-								2699
+								9957,
+								9957
 							]
 						],
 						"settings":
 						{
 							"incomplete_sync": null,
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1334.0,
+						"translation.y": 6969.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -345,19 +358,19 @@
 				},
 				{
 					"buffer": 1,
-					"file": "index.h",
+					"file": "config.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 265,
+						"buffer_size": 3277,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								265,
-								265
+								1797,
+								1797
 							]
 						],
 						"settings":
@@ -365,6 +378,36 @@
 							"incomplete_sync": null,
 							"remote_loading": false,
 							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 483.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "index.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 644,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								283,
+								283
+							]
+						],
+						"settings":
+						{
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -381,7 +424,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 27.0
+		"height": 32.0
 	},
 	"input":
 	{
