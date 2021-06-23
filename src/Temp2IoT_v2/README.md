@@ -9,4 +9,4 @@
 | char[20] | temp1Name     |             | "Water Temperature"   |
 | char[20] | temp2Name     |             | "Ambient Temperature" |
 | int      | sensorCnt     |             | 2                     |
-| bool     | toggleSensors |             | ´false´               |
+| bool     | toggleSensors |             | `false`               |
