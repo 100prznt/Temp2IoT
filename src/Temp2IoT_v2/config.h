@@ -56,9 +56,12 @@ const char _PAGE_START[] PROGMEM  = "<h1>Temp2IoT</h1><form method=get action=/c
 
 const char _PAGE_ACTIONS[] PROGMEM = "<label>Funktionen</label>    <a href='/reset'>Neustart</a>   <a href='/update'>Update</a> <a href='/format'>Zurücksetzen</a>";
 
-const char _PAGE_CONFIG_NAME[] PROGMEM  = "<label>Instagram-Name:</label> <input type=text name=instagramname value=%INSTAGRAM% >";
-const char _PAGE_CONFIG_MODE1[] PROGMEM  = "<label>Modus: </label> <label class=inline><input type=radio name=mode value=1 checked> Nur Counter</label> <label  class=inline><input type=radio name=mode value=2         > Nur Uhr</label> <label class=inline><input type=radio name=mode value=3> Counter und Uhr im Wechsel</label>" ;
-const char _PAGE_CONFIG_MODE2[] PROGMEM  = "<label>Modus: </label> <label class=inline><input type=radio name=mode value=1        > Nur Counter</label> <label  class=inline><input type=radio name=mode value=2 checked > Nur Uhr</label> <label class=inline><input type=radio name=mode value=3> Counter und Uhr im Wechsel</label>" ;
-const char _PAGE_CONFIG_MODE3[] PROGMEM  = "<label>Modus: </label> <label class=inline><input type=radio name=mode value=1        > Nur Counter</label> <label  class=inline><input type=radio name=mode value=2         > Nur Uhr</label> <label class=inline><input type=radio name=mode value=3 checked> Counter und Uhr im Wechsel</label>" ;
+const char _PAGE_CONFIG_SYSNAME[] PROGMEM  = "<label>Instance name:</label> <input type=text name=systemName value=%SYSNAME% >";
+const char _PAGE_CONFIG_SENSOR1NAME[] PROGMEM  = "<label>Sensor 1 name:</label> <input type=text name=temp1Name value=%SENSOR1NAME% >";
+const char _PAGE_CONFIG_SENSOR2NAME[] PROGMEM  = "<label>Sensor 2 name:</label> <input type=text name=temp2Name value=%SENSOR2NAME% >";
 
-const char _PAGE_CONFIG_INTENSITY[] PROGMEM  = "<label>Helligkeit</label> <input type=range min=0 max=15 name=intensity value=%INTENSITY% >" ;
+const char _PAGE_CONFIG_SENSORTOOGLETRUE[] PROGMEM   = "<label>Sensoren tauschen:</label> <input type=checkbox name=toggleSensors checked >";
+const char _PAGE_CONFIG_SENSORTOOGLEFALSE[] PROGMEM  = "<label>Sensoren tauschen:</label> <input type=checkbox name=toggleSensors >";
+
+const char _PAGE_CONFIG_SENSORCNT1[] PROGMEM  = "<label>Modus: </label> <label class=inline><input type=radio name=sensorCnt value=1 checked> Ein Sensor</label> <label  class=inline><input type=radio name=sensorCnt value=2         > Zwei Sensoren</label>" ;
+const char _PAGE_CONFIG_SENSORCNT2[] PROGMEM  = "<label>Modus: </label> <label class=inline><input type=radio name=sensorCnt value=1        > Ein Sensor</label> <label  class=inline><input type=radio name=sensorCnt value=2 checked > Zwei Sensoren</label>" ;

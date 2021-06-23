@@ -39,9 +39,9 @@ https://github.com/jegade/followercounter
 #define VERSION "0.1"
 #define ROTATE 90
 #define USE_SERIAL Serial
-//#define ONE_WIRE_BUS D3
+#define ONE_WIRE_BUS D3
 
-#define TOGGLE_PIN 0 /D3
+#define TOGGLE_PIN D6
 
 const long interval = 3000 * 1000;  // check every 60 minutes
 unsigned long previousMillis = millis() - 2980 * 1000; 
@@ -52,9 +52,10 @@ WiFiClientSecure client;
 ESP8266WebServer server(80);
 
 
-//OneWire oneWire(ONE_WIRE_BUS);
-//DallasTemperature DS18B20(&oneWire);
-char TemperatureStr[6];
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature DS18B20(&oneWire);
+char Temperature1Str[6] = "NaN";
+char Temperature2Str[6] = "NaN";
 unsigned int SecureCounter;
 
 
@@ -114,10 +115,10 @@ void handleRoot()
 
 	TokenStringPair sensor1pair[2];
 	sensor1pair[0].setPair("%NAME%", temp1Name);
-	sensor1pair[1].setPair("%VALUE%", "TemperatureStr");
+	sensor1pair[1].setPair("%VALUE%", Temperature1Str);
 	TokenStringPair sensor2pair[2];
 	sensor2pair[0].setPair("%NAME%", temp2Name);
-	sensor2pair[1].setPair("%VALUE%", "77.66");
+	sensor2pair[1].setPair("%VALUE%", Temperature2Str);
 
 	switch (sensorCnt)
 	{
@@ -162,40 +163,48 @@ void handleConfig()
 {
 	ESPStringTemplate webpage(htmlBuffer, sizeof(htmlBuffer));
 
-	TokenStringPair pair[1];
-	pair[0].setPair("%NAME%", systemName);
+	TokenStringPair pair[3];
+	pair[0].setPair("%SYSNAME%", systemName);
+	pair[1].setPair("%SENSOR1NAME%", temp1Name);
+	pair[2].setPair("%SENSOR2NAME%", temp2Name);
 
 	webpage.add_P(_PAGE_HEAD);
 	webpage.add_P(_PAGE_START);
 
 	webpage.add_P(_PAGE_ACTIONS);
 
-	webpage.add_P(_PAGE_CONFIG_NAME, pair,1);
+	webpage.add_P(_PAGE_CONFIG_SYSNAME, pair, 1);
+	webpage.add_P(_PAGE_CONFIG_SENSOR1NAME, pair, 2);
+	webpage.add_P(_PAGE_CONFIG_SENSOR2NAME, pair, 3);
 
-	switch (mode)
+	switch (sensorCnt)
 	{
 		case 1:
-			webpage.add_P(_PAGE_CONFIG_MODE1);
-			break;
+		webpage.add_P(_PAGE_CONFIG_SENSORCNT1);
+		break;
 
 		case 2:
-			webpage.add_P(_PAGE_CONFIG_MODE2);
-			break;
-
-		case 3:
-			webpage.add_P(_PAGE_CONFIG_MODE3);
-			break;
+		webpage.add_P(_PAGE_CONFIG_SENSORCNT2);
+		break;
 
 		default:
-			webpage.add_P(_PAGE_CONFIG_MODE1);
-			break;
+		webpage.add_P(_PAGE_CONFIG_SENSORCNT1);
+		break;
+	}
+
+	if (toggleSensors)
+	{
+		webpage.add_P(_PAGE_CONFIG_SENSORTOOGLETRUE);
+	}
+	else
+	{
+		webpage.add_P(_PAGE_CONFIG_SENSORTOOGLEFALSE);		
 	}
 
 	TokenStringPair intensityPair[1]; 
 
 
 	intensityPair[0].setPair("%NAME1SENSOR%",temp1Name );
-	webpage.add_P(_PAGE_CONFIG_INTENSITY, intensityPair, 1);
 	webpage.add_P(_PAGE_FOOTER);
 
 	server.send(200, "text/html", htmlBuffer);
@@ -209,9 +218,28 @@ void redirectBack()
 
 void getConfig()
 {
-  	// mode
-	String modeString = server.arg("mode");
-	mode = modeString.toInt();
+  	String systemNameString = server.arg("systemName");
+  	systemNameString.toCharArray(systemName,20);
+  	String temp1NameString = server.arg("temp1Name");
+  	temp1NameString.toCharArray(temp1Name,20);
+  	String temp2NameString = server.arg("temp2Name");
+  	temp2NameString.toCharArray(temp2Name,20);
+
+
+	String toggleSensorsString = server.arg("toggleSensors");
+	if (toggleSensorsString == "on")
+	{
+		toggleSensors = true;
+	}
+	else
+	{
+		toggleSensors = false;
+	}
+
+
+  	// sensorCnt
+	String sensorCntString = server.arg("sensorCnt");
+	sensorCnt = sensorCntString.toInt();
 
 	saveConfig();
 
@@ -237,27 +265,37 @@ void getFormat()
 	infoReset();
 }
 
-// void readTemperature() {
-//     Serial.println("Reading");
-//     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
-//     float temp;
-//     int cnt = 3; //retry counter
-//     do {
-//        if (cnt <= 0) {
-//           String nanStr = "NaN";
-//           nanStr.toCharArray(TemperatureStr, 6);
-//           break;
-//        }
-//        DS18B20.requestTemperatures(); 
-//        temp = DS18B20.getTempCByIndex(0);
-       
-//        dtostrf(temp, 2, 2, TemperatureStr);
-//        delay(100);
-//        cnt--;
-//     } while (temp == 85.0 || temp == (-127.0));
-//     SecureCounter++;
-//     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
-// }
+void readTemperature() {
+	Serial.println("Start new reading on 1-Wire bus...");
+    digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
+    float temp1;
+    float temp2;
+    int cnt = 3; //retry counter
+    do {
+    	if (cnt <= 0) {
+    		String nanStr = "NaN";
+    		nanStr.toCharArray(Temperature1Str, 6);
+    		nanStr.toCharArray(Temperature2Str, 6);
+    		break;
+    	}
+    	DS18B20.requestTemperatures(); 
+    	temp1 = DS18B20.getTempCByIndex(0);
+    	dtostrf(temp1, 2, 2, Temperature1Str);
+    	if (sensorCnt > 1)
+    	{
+    		temp2 = DS18B20.getTempCByIndex(1);
+    		if (temp2 != 127.94)
+    		{
+    			dtostrf(temp2, 2, 2, Temperature2Str);
+    		}
+    	}
+
+    	delay(100);
+    	cnt--;
+    } while (temp1 == 85.0 || temp1 == (-127.0) || temp1 == 127.94);
+    SecureCounter++;
+    digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
+}
 
 void setup()
 {
@@ -272,131 +310,132 @@ void setup()
 
 
   	// Set Reset-Pin to Input Mode
-	pinMode(TOGGLE_PIN, INPUT);
+    pinMode(TOGGLE_PIN, INPUT);
 
 
-	if (SPIFFS.begin())
-	{
-		if (SPIFFS.exists("/config.json")) {
+    if (SPIFFS.begin())
+    {
+    	if (SPIFFS.exists("/config.json")) {
       	//file exists, reading and loading
 
-			File configFile = SPIFFS.open("/config.json", "r");
-			if (configFile)
-			{
-				Serial.println("opened config file");
-				size_t size = configFile.size();
+    		File configFile = SPIFFS.open("/config.json", "r");
+    		if (configFile)
+    		{
+    			Serial.println("opened config file");
+    			size_t size = configFile.size();
         		// Allocate a buffer to store contents of the file.
-				std::unique_ptr<char[]> buf(new char[size]);
+    			std::unique_ptr<char[]> buf(new char[size]);
 
-				configFile.readBytes(buf.get(), size);
-				DynamicJsonDocument json(1024);
-				deserializeJson(json, buf.get());
-				serializeJson(json,Serial);
+    			configFile.readBytes(buf.get(), size);
+    			DynamicJsonDocument json(1024);
+    			deserializeJson(json, buf.get());
+    			serializeJson(json,Serial);
 
 				//strcpy(temp1Name, json["temp1Name"]);
 				//strcpy(temp2Name, json["temp2Name"]);
 
-				JsonVariant jsonSystemName = json["systemName"];
-				if (!jsonSystemName.isNull())
-				{
-					strcpy(systemName, json["systemName"]);
-				}
+    			JsonVariant jsonSystemName = json["systemName"];
+    			if (!jsonSystemName.isNull())
+    			{
+    				strcpy(systemName, json["systemName"]);
+    			}
 
-				JsonVariant jsonTemp1Name = json["temp1Name"];
-				if (!jsonTemp1Name.isNull())
-				{
-					strcpy(temp1Name, json["temp1Name"]);
-				} 
-				JsonVariant jsonTemp2Name = json["temp2Name"];
-				if (!jsonTemp2Name.isNull())
-				{
-					strcpy(temp2Name, json["temp2Name"]);
-				} 
+    			JsonVariant jsonTemp1Name = json["temp1Name"];
+    			if (!jsonTemp1Name.isNull())
+    			{
+    				strcpy(temp1Name, json["temp1Name"]);
+    			} 
+    			JsonVariant jsonTemp2Name = json["temp2Name"];
+    			if (!jsonTemp2Name.isNull())
+    			{
+    				strcpy(temp2Name, json["temp2Name"]);
+    			} 
 
-				JsonVariant jsonSensorCnt = json["sensorCnt"];
-				if (!jsonSensorCnt.isNull())
-				{ 
-					sensorCnt = jsonSensorCnt.as<int>();
-				}
+    			JsonVariant jsonSensorCnt = json["sensorCnt"];
+    			if (!jsonSensorCnt.isNull())
+    			{ 
+    				sensorCnt = jsonSensorCnt.as<int>();
+    			}
 
-				JsonVariant jsonToggleTemps = json["toggleSensors"];
-				if (!jsonToggleTemps.isNull())
-				{ 
-					toggleSensors = jsonToggleTemps.as<bool>();
-				}
-			}
-		}
-	}
-	else
-	{
-		Serial.println("failed to mount FS");
-	}
+    			JsonVariant jsonToggleTemps = json["toggleSensors"];
+    			if (!jsonToggleTemps.isNull())
+    			{ 
+    				toggleSensors = jsonToggleTemps.as<bool>();
+    			}
+    		}
+    	}
+    }
+    else
+    {
+    	Serial.println("failed to mount FS");
+    }
   	//end read
 
-	WiFiManager wifiManager;
+    WiFiManager wifiManager;
 	//wifiManager.setCustomHeadElement("<style>html{filter: invert(100%); -webkit-filter: invert(100%);}</style>");
-	wifiManager.setCustomHeadElement("<style>button,input[type='button'],input[type='submit']{background-color:#ff2e64;color:#fff}</style>");
+    wifiManager.setCustomHeadElement("<style>button,input[type='button'],input[type='submit']{background-color:#ff2e64;color:#fff}</style>");
 
-	WiFiManagerParameter custom_header("<h3>Temp2IoT Settings</h3>");
+    WiFiManagerParameter custom_header("<h3>Temp2IoT Settings</h3>");
 
   	//Definitins of custom parameters
 	//Prepare
-	char char_sensorCnt[2];
-	itoa(sensorCnt, char_sensorCnt, 10);
+    char char_sensorCnt[2];
+    itoa(sensorCnt, char_sensorCnt, 10);
 
-	char char_toggleSensors[6];
-	if (toggleSensors)
-	{
-		strncpy(char_toggleSensors, "true", 6);
-	}
-	else
-	{
-		strncpy(char_toggleSensors, "false", 6);
-	}
+    char char_toggleSensors[6];
+    if (toggleSensors)
+    {
+    	strncpy(char_toggleSensors, "true", 6);
+    }
+    else
+    {
+    	strncpy(char_toggleSensors, "false", 6);
+    }
 
 	//Define
-	WiFiManagerParameter custom_systemName("systemName", "Systemname", systemName, 20);
-	WiFiManagerParameter custom_temp1Name("temp1Name", "Bezeichnung Sensor 1", temp1Name, 20);
-	WiFiManagerParameter custom_temp2Name("temp2Name", "Bezeichnung Sensor 2", temp2Name, 20);
+    WiFiManagerParameter custom_systemName("systemName", "Systemname", systemName, 20);
+    WiFiManagerParameter custom_temp1Name("temp1Name", "Bezeichnung Sensor 1", temp1Name, 20);
+    WiFiManagerParameter custom_temp2Name("temp2Name", "Bezeichnung Sensor 2", temp2Name, 20);
 	//WiFiManagerParameter custom_sensorCnt("sensorCnt", "Sensor Anzahl (1/2)", char_sensorCnt, 2);
 	//WiFiManagerParameter custom_toggleSensors("toggleSensors", "Sensoren tauschen (true/false)", char_toggleSensors, 6);
 
   	//Add parameters to wifiManager
-	wifiManager.addParameter(&custom_header);
-	wifiManager.addParameter(&custom_systemName);
-	wifiManager.addParameter(&custom_temp1Name);
-	wifiManager.addParameter(&custom_temp2Name);
+    wifiManager.addParameter(&custom_header);
+    wifiManager.addParameter(&custom_systemName);
+    wifiManager.addParameter(&custom_temp1Name);
+    wifiManager.addParameter(&custom_temp2Name);
 	//wifiManager.addParameter(&custom_sensorCnt);
 	//wifiManager.addParameter(&custom_toggleSensors);
- 
-	delay(500);
+
+    delay(500);
 
 
-	configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
   	setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 0);  // https://github.com/nayarsystems/posix_tz_db 
 
 	//set config save notify callback
-	wifiManager.setSaveConfigCallback(saveConfigCallback);
+  	wifiManager.setSaveConfigCallback(saveConfigCallback);
 
 
-	wifiManager.autoConnect("Temp2IoT");
+  	wifiManager.autoConnect("Temp2IoT");
 
 
-	server.on("/", handleRoot);
-	server.on("/format", getFormat);
-	server.on("/update", getUpdate);
-	server.on("/reset", getReset);
-	server.on("/config", getConfig);
+  	server.on("/", handleRoot);
+  	server.on("/format", getFormat);
+  	server.on("/update", getUpdate);
+  	server.on("/reset", getReset);
+  	server.on("/config", getConfig);
+  	server.on("/test", handleConfig);
 
-	server.begin();
+  	server.begin();
 
-	Serial.print("IP address: ");
-	Serial.println(WiFi.localIP());
+  	Serial.print("IP address: ");
+  	Serial.println(WiFi.localIP());
 
 	//read updated parameters
-	strcpy(systemName, custom_systemName.getValue());
-	strcpy(temp1Name, custom_temp1Name.getValue());
-	strcpy(temp2Name, custom_temp2Name.getValue());
+  	strcpy(systemName, custom_systemName.getValue());
+  	strcpy(temp1Name, custom_temp1Name.getValue());
+  	strcpy(temp2Name, custom_temp2Name.getValue());
 
 	/* sensorCnt = String(custom_sensorCnt.getValue()).toInt();
 	if (String(custom_toggleSensors.getValue()) == String("true") || String(custom_toggleSensors.getValue()) == String("TRUE"))
@@ -409,16 +448,16 @@ void setup()
 	} */
 
 	//save the custom parameters to FS
-	if (shouldSaveConfig)
-	{
-		saveConfig();
-	}
+  	if (shouldSaveConfig)
+  	{
+  		saveConfig();
+  	}
 
 
-	//DS18B20.begin();
-    SecureCounter = 0;
+  	DS18B20.begin();
+  	SecureCounter = 0;
 
-    Serial.println("HTTP Temp2IoT server started");
+  	Serial.println("HTTP Temp2IoT server started");
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
 }
 
@@ -547,8 +586,8 @@ void loop() {
 
 	if (currentMillis % 8000 == 0 )
 	{ 
-		//readTemperature();
-  	}
+		readTemperature();
+	}
 
 	if (buttonState != lastButtonState && currentMillis > lastPressed + 50 ) {
 
@@ -580,41 +619,41 @@ void loop() {
 
 				case 1: 
                   // Einmal gedrückt / FollowerCounter-Modus
-					mode = 1;
+				mode = 1;
 				break;
 
 				case 2:
                   // Zweimal gedrückt / Uhrzeit-Modus
-					mode = 2;
+				mode = 2;
 				break;
 
 				case 3:
                   // Dreimal gedrückt / Wechselmodus
-					mode = 3;
+				mode = 3;
 				break;
 
 				case 4:
-					infoWlan();
+				infoWlan();
 				break;
 
 				case 5:
-					infoIP();
+				infoIP();
 				break;
 
 				case 6:
-					infoVersion();
+				infoVersion();
 				break;
 
 				case 7:
-					updateFirmware();
+				updateFirmware();
 				break;
 
 				case 8:
-					restartX();
+				restartX();
 				break;
 
 				case 10:
-					infoReset();
+				infoReset();
 				break;
 
 				default:

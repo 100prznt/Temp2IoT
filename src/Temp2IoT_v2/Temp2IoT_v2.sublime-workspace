@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"too",
+				"toggleSensors"
+			],
+			[
+				"to",
+				"toggleSensors"
+			],
+			[
+				"prit",
+				"println"
+			],
+			[
 				"Temp",
 				"Temp2IoT"
 			],
@@ -39,16 +51,7 @@
 			"file": "Temp2IoT_v2.ino",
 			"settings":
 			{
-				"buffer_size": 14017,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "config.h",
-			"settings":
-			{
-				"buffer_size": 3277,
+				"buffer_size": 15234,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -57,7 +60,16 @@
 			"file": "index.h",
 			"settings":
 			{
-				"buffer_size": 644,
+				"buffer_size": 654,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "config.h",
+			"settings":
+			{
+				"buffer_size": 3199,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -95,12 +107,10 @@
 	},
 	"expanded_folders":
 	[
-		"/C/dev/Projekte_Git/Temp2IoT/src/Temp2IoT_v2"
+		"/D/Projects/GitHub/Temp2IoT/src/Temp2IoT_v2"
 	],
 	"file_history":
 	[
-		"//bosch.com/dfsrb/DfsDE/LOC/Eh/PS/TEF/70_Cooperation/COS/03_xPS_COS_PAV/PAV_HPS/HPS5/Abgleichvorschrift_HPS5_0_50bar_0261P04802_V03.xml",
-		"/C/work/20210623_HPS_50bar_Problem/Sensor210623603088.csv",
 		"/C/Temp/sdfdfs.c",
 		"/D/Projects/GitHub/Temp2IoT/src/Temp2IoT_v2/index.h",
 		"/D/Projects/GitHub/Rca.Pool.Chemistry/Rca.Pool.Chemistry.Php/Constants.php",
@@ -226,11 +236,13 @@
 		"/C/pmcu2005/SYSTEMCONFIG/TestPlanActual.xml",
 		"/C/pmcu2005/WP2/init.scpi",
 		"/C/pmcu2005/WP2/lsrd.scpi",
-		"/C/pmcu2005/WP2/impedance.scpi"
+		"/C/pmcu2005/WP2/impedance.scpi",
+		"/C/pmcu2005/WP2/Wp2TestPointAssignmentNioBits.xml",
+		"/C/privat/RCE/HP21/notes.md"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 39.3333333333
 	},
 	"find_in_files":
 	{
@@ -241,12 +253,9 @@
 	},
 	"find_state":
 	{
-		"case_sensitive": false,
+		"case_sensitive": true,
 		"find_history":
 		[
-			"analog",
-			"analog_error",
-			"analogerror",
 			"toggleTemps",
 			"tempCnt",
 			"OutputData",
@@ -332,25 +341,24 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14017,
+						"buffer_size": 15234,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9957,
-								9957
+								4518,
+								4518
 							]
 						],
 						"settings":
 						{
 							"incomplete_sync": null,
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 6969.0,
+						"translation.y": 3363.33333333,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -358,19 +366,19 @@
 				},
 				{
 					"buffer": 1,
-					"file": "config.h",
+					"file": "index.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3277,
+						"buffer_size": 654,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1797,
-								1797
+								515,
+								515
 							]
 						],
 						"settings":
@@ -383,7 +391,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 483.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
@@ -391,29 +399,32 @@
 				},
 				{
 					"buffer": 2,
-					"file": "index.h",
+					"file": "config.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 644,
+						"buffer_size": 3199,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								283,
-								283
+								2417,
+								2446
 							]
 						],
 						"settings":
 						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 324.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -424,7 +435,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 32.0
+		"height": 27.0
 	},
 	"input":
 	{
@@ -465,7 +476,7 @@
 	"project": "Temp2IoT_v2.sublime-project",
 	"replace":
 	{
-		"height": 70.6666666667
+		"height": 50.0
 	},
 	"save_all_on_build": true,
 	"select_file":
