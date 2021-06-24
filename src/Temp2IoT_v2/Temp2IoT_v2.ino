@@ -139,15 +139,12 @@ void handleRoot()
 
 void handleApi()
 {
-	char versionString[8];
-	sprintf(versionString,"V-%s", VERSION);
-
 	char JSONmessageBuffer[1024];
 	DynamicJsonDocument doc(1024);
 
 	doc["systemname"] = systemName;
 	doc["secure_counter"] = SecureCounter;
-	doc["firmware"] = versionString;
+	doc["firmware"] = VERSION;
 	doc["sensors"][0] = getData(1);
 	if (sensorCnt == 2)
 	{
