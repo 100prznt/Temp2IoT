@@ -94,6 +94,13 @@ Web UI on a desktop browser
 ![Web UI on a smartphone browser](docu/webui_smartphone.png)
 Web UI on a smartphone browser
 
+## System Setup
+* URL: `http://<Temp2IoT IP>/setup/`
+  <br>
+  <br>
+  <br>
+![Web UI on a desktop browser](docu/setup_desktop.png)
+Setup page on a desktop browser
 
 ## Enclosure
 In the folder [hardware/enclosure](hardware/enclosure) you will find 2 STL files of a suitable enclosure. If the cover is printed upside-down, you can print the first two layers in a different color to make the Temp2IoT icon stand out better.
