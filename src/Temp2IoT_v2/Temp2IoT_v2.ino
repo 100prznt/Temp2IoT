@@ -41,11 +41,9 @@ https://github.com/jegade/followercounter
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
 
-#define TOGGLE_PIN D6
 
 const long interval = 3000 * 1000;  // check every 60 minutes
-unsigned long previousMillis = millis() - 2980 * 1000; 
-unsigned long lastPressed = millis();
+unsigned long previousMillis = millis() - 2980 * 1000;
 
 WiFiClientSecure client;
 
@@ -58,28 +56,7 @@ char Temperature1Str[6] = "NaN";
 char Temperature2Str[6] = "NaN";
 unsigned int SecureCounter;
 
-
-
 char time_value[20];
-
-
-int textsize = 0;
-
-int follower;
-int modules = 4;
-
-int mode = 1;
-int modetoggle = 0;
-
-// Variables will change:
-int buttonPushCounter = 0;   // counter for the number of button presses
-int buttonState = 1;         // current state of the button
-int lastButtonState = 1;     // previous state of the button
-
-
-
-
-
 
 //define your default values here, if there are different values in config.json, they are overwritten.
 char systemName[20] = "Temp2IoT";
@@ -88,7 +65,9 @@ char temp2Name[20] = "Ambient Temperature";
 int sensorCnt = 2;
 bool toggleSensors;
 
-char htmlBuffer[4096];
+//init up
+char measTime[26] = "Thu Jan  1 00:00:00 1970";
+char htmlBuffer[8000];
 
 // =======================================================================
 
@@ -107,56 +86,105 @@ void handleRoot()
 {
 	ESPStringTemplate webpage(htmlBuffer, sizeof(htmlBuffer));
 
-	TokenStringPair pair[1];
-	pair[0].setPair("%NAME%", systemName);
+	TokenStringPair pair_SystemName[1];
+	pair_SystemName[0].setPair("%NAME%", systemName);
+
+	TokenStringPair pair_Data[4];
+
+	if (toggleSensors)
+	{
+		pair_Data[0].setPair("%T1%", Temperature2Str);
+		pair_Data[1].setPair("%N1%", temp2Name);
+		pair_Data[2].setPair("%T2%", Temperature1Str);
+		pair_Data[3].setPair("%N2%", temp1Name);
+	}
+	else
+	{
+		pair_Data[0].setPair("%T1%", Temperature1Str);
+		pair_Data[1].setPair("%N1%", temp1Name);
+		pair_Data[2].setPair("%T2%", Temperature2Str);
+		pair_Data[3].setPair("%N2%", temp2Name);
+	}
+
+	TokenStringPair pair_SecureCounter[1];
+	char secureCounterStr[20];
+	itoa(SecureCounter, secureCounterStr, 10);
+	pair_SecureCounter[0].setPair("%SC%", secureCounterStr);
 
 	webpage.add_P(_PAGE_WEBUI_HEAD);
-	webpage.add_P(_PAGE_WEBUI_START, pair, 1);
 
-	TokenStringPair sensor1pair[2];
-	sensor1pair[0].setPair("%NAME%", temp1Name);
-	sensor1pair[1].setPair("%VALUE%", Temperature1Str);
-	TokenStringPair sensor2pair[2];
-	sensor2pair[0].setPair("%NAME%", temp2Name);
-	sensor2pair[1].setPair("%VALUE%", Temperature2Str);
+	webpage.add_P(_PAGE_WEBUI_CARDHEAD, pair_SystemName, 1);
+	
+	if (sensorCnt == 2)
+	{
+		webpage.add_P(_PAGE_WEBUI_CARDBODY, pair_Data, 4);
+	}
+	else
+	{
+		webpage.add_P(_PAGE_WEBUI_CARDBODYSINGLE, pair_Data, 2);
+	}
 
-	switch (sensorCnt)
+	webpage.add_P(_PAGE_WEBUI_CARDFOOTER, pair_SecureCounter, 1);
+	
+	if (sensorCnt == 2)
+	{
+		webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT2);
+	}
+	else
+	{
+		//webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT1);
+	}	
+	server.send(200, "text/html", htmlBuffer);
+}
+
+void handleApi()
+{
+	char versionString[8];
+	sprintf(versionString,"V-%s", VERSION);
+
+	char JSONmessageBuffer[1024];
+	DynamicJsonDocument doc(1024);
+
+	doc["systemname"] = systemName;
+	doc["secure_counter"] = SecureCounter;
+	doc["firmware"] = versionString;
+	doc["sensors"][0] = getData(1);
+	if (sensorCnt == 2)
+	{
+		doc["sensors"][1] = getData(2);
+	}
+
+	serializeJsonPretty(doc, JSONmessageBuffer);
+
+	server.send(200, "application/json", JSONmessageBuffer);
+}
+
+DynamicJsonDocument getData(int idx)
+{
+	DynamicJsonDocument doc(1024);
+
+	switch (idx)
 	{
 		case 1:
 		{
-			USE_SERIAL.println("sensor count: 1");
-			webpage.add_P(_PAGE_WEBUI_SENSOR1, sensor1pair, 2);
+			doc["name"] = temp1Name;
+			doc["value"] = Temperature1Str;
 		}
 		break;
-
 		case 2:
 		{
-			USE_SERIAL.println("sensor count: 2");
-			if (toggleSensors)
-			{
-				USE_SERIAL.println("toggle sensors: true");
-				webpage.add_P(_PAGE_WEBUI_SENSOR1, sensor2pair, 2);
-				webpage.add_P(_PAGE_WEBUI_SENSOR2, sensor1pair, 2);
-			}
-			else
-			{
-				USE_SERIAL.println("toggle sensors: false");
-				webpage.add_P(_PAGE_WEBUI_SENSOR1, sensor1pair, 2);
-				webpage.add_P(_PAGE_WEBUI_SENSOR2, sensor2pair, 2);
-			}
+			doc["name"] = temp2Name;
+			doc["value"] = Temperature2Str;
 		}
 		break;
-
 		default:
-		{
-			webpage.add_P(_PAGE_WEBUI_ERROR);
-		}
 		break;
 	}
 
-	webpage.add_P(_PAGE_WEBUI_FOOTER);
+	doc["unit"] = "Celsius";
+	doc["time"] = measTime;
 
-	server.send(200, "text/html", htmlBuffer);
+	return doc;
 }
 
 void handleConfig()
@@ -270,6 +298,11 @@ void readTemperature() {
     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
     float temp1;
     float temp2;
+
+    time_t now = time(nullptr);
+	String time = String(ctime(&now));
+    time.toCharArray(measTime, 25);
+
     int cnt = 3; //retry counter
     do {
     	if (cnt <= 0) {
@@ -309,10 +342,6 @@ void setup()
     digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on
 
 
-  	// Set Reset-Pin to Input Mode
-    pinMode(TOGGLE_PIN, INPUT);
-
-
     if (SPIFFS.begin())
     {
     	if (SPIFFS.exists("/config.json")) {
@@ -330,9 +359,6 @@ void setup()
     			DynamicJsonDocument json(1024);
     			deserializeJson(json, buf.get());
     			serializeJson(json,Serial);
-
-				//strcpy(temp1Name, json["temp1Name"]);
-				//strcpy(temp2Name, json["temp2Name"]);
 
     			JsonVariant jsonSystemName = json["systemName"];
     			if (!jsonSystemName.isNull())
@@ -372,7 +398,6 @@ void setup()
   	//end read
 
     WiFiManager wifiManager;
-	//wifiManager.setCustomHeadElement("<style>html{filter: invert(100%); -webkit-filter: invert(100%);}</style>");
     wifiManager.setCustomHeadElement("<style>button,input[type='button'],input[type='submit']{background-color:#ff2e64;color:#fff}</style>");
 
     WiFiManagerParameter custom_header("<h3>Temp2IoT Settings</h3>");
@@ -396,16 +421,12 @@ void setup()
     WiFiManagerParameter custom_systemName("systemName", "Systemname", systemName, 20);
     WiFiManagerParameter custom_temp1Name("temp1Name", "Bezeichnung Sensor 1", temp1Name, 20);
     WiFiManagerParameter custom_temp2Name("temp2Name", "Bezeichnung Sensor 2", temp2Name, 20);
-	//WiFiManagerParameter custom_sensorCnt("sensorCnt", "Sensor Anzahl (1/2)", char_sensorCnt, 2);
-	//WiFiManagerParameter custom_toggleSensors("toggleSensors", "Sensoren tauschen (true/false)", char_toggleSensors, 6);
 
   	//Add parameters to wifiManager
     wifiManager.addParameter(&custom_header);
     wifiManager.addParameter(&custom_systemName);
     wifiManager.addParameter(&custom_temp1Name);
     wifiManager.addParameter(&custom_temp2Name);
-	//wifiManager.addParameter(&custom_sensorCnt);
-	//wifiManager.addParameter(&custom_toggleSensors);
 
     delay(500);
 
@@ -425,7 +446,8 @@ void setup()
   	server.on("/update", getUpdate);
   	server.on("/reset", getReset);
   	server.on("/config", getConfig);
-  	server.on("/test", handleConfig);
+  	server.on("/setup", handleConfig);
+  	server.on("/api", handleApi);
 
   	server.begin();
 
@@ -481,28 +503,6 @@ void saveConfig() {
 	serializeJson(json, configFile);
 }
 
-void infoWlan() {
-
-	if (WiFi.status() ==  WL_CONNECTED )
-	{
-	    // WLAN OK
-	} 
-	else
-	{
-    	// WLAN Error
-	}
-}
-
-void infoIP() {
-	String localIP = WiFi.localIP().toString();
-}
-
-void infoVersion() {
-	char versionString[8];
-	sprintf(versionString,"Ver. %s", VERSION);
-}
-
-
 void infoReset() {
 	Serial.println("Format System");
 
@@ -523,15 +523,18 @@ void restartX() {
 }
 
 
-void update_started() {
+void update_started()
+{
 	USE_SERIAL.println("CALLBACK:  HTTP update process started");
 }
 
-void update_finished() {
+void update_finished()
+{
 	USE_SERIAL.println("CALLBACK:  HTTP update process finished");
 }
 
-void update_progress(int cur, int total) {
+void update_progress(int cur, int total)
+{
 	char progressString[10];
 	float percent = ((float)cur   / (float)total )  * 100;
 	sprintf(progressString, " %s",  String(percent).c_str()  );
@@ -539,16 +542,18 @@ void update_progress(int cur, int total) {
 	USE_SERIAL.printf("CALLBACK:  HTTP update process at %d of %d bytes...\n", cur, total);
 }
 
-void update_error(int err) {
+void update_error(int err)
+{
 	char errorString[8];
 	sprintf(errorString, "Err %d", err);
 
 	USE_SERIAL.printf("CALLBACK:  HTTP update fatal error code %d\n", err);
 }
 
-void updateFirmware() {
+void updateFirmware()
+{
 
-	ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
+	/*ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
 
     // Add optional callback notifiers
 	ESPhttpUpdate.onStart(update_started);
@@ -556,7 +561,7 @@ void updateFirmware() {
 	ESPhttpUpdate.onProgress(update_progress);
 	ESPhttpUpdate.onError(update_error);
 
-	t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://counter.buuild.it/static/themes/counter/followercounter.ino.bin");
+	t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://<URL>Temp2IoT_v2.ino.bin");
 
 
 	switch (ret) {
@@ -571,114 +576,31 @@ void updateFirmware() {
 		case HTTP_UPDATE_OK:
 		USE_SERIAL.println("HTTP_UPDATE_OK");
 		break;
-	}
-
+	}*/
 }
 
 //  
-void loop() {
-
+void loop()
+{
 	server.handleClient();
 
-	buttonState = digitalRead(TOGGLE_PIN);
 	unsigned long currentMillis = millis();
 
-
-	if (currentMillis % 8000 == 0 )
+	if (currentMillis % 5000 == 0 )
 	{ 
 		readTemperature();
 	}
-
-	if (buttonState != lastButtonState && currentMillis > lastPressed + 50 ) {
-
-    // if the state has changed, increment the counter
-		if (buttonState == LOW) {
-      // if the current state is HIGH then the button went from off to on:
-			buttonPushCounter++;
-			lastPressed = currentMillis;
-
-			Serial.println("push");
-
-			Serial.println(buttonPushCounter);
-
-		} else {
-      // if the current state is LOW then the button went from on to off:
-			Serial.println("off");
-		}
-	}
-
-  // Warte 1sec nach dem letzten Tastendruck 
-	if (currentMillis > lastPressed + 1000) {
-
-		if (buttonPushCounter > 0 ) {
-
-			Serial.print("number of button pushes: ");
-			Serial.println(buttonPushCounter);
-
-			switch (buttonPushCounter) {
-
-				case 1: 
-                  // Einmal gedrückt / FollowerCounter-Modus
-				mode = 1;
-				break;
-
-				case 2:
-                  // Zweimal gedrückt / Uhrzeit-Modus
-				mode = 2;
-				break;
-
-				case 3:
-                  // Dreimal gedrückt / Wechselmodus
-				mode = 3;
-				break;
-
-				case 4:
-				infoWlan();
-				break;
-
-				case 5:
-				infoIP();
-				break;
-
-				case 6:
-				infoVersion();
-				break;
-
-				case 7:
-				updateFirmware();
-				break;
-
-				case 8:
-				restartX();
-				break;
-
-				case 10:
-				infoReset();
-				break;
-
-				default:
-					//Too many!
-				break;
-			}
-
-
-
-		}
-
-		buttonPushCounter = 0;
-	}
-
-  	// save the current state as the last state, for next time through the loop
-	lastButtonState = buttonState;   
-
 }
 
-void printTime() {
-
+void getTime()
+{
 	time_t now = time(nullptr);
 	String time = String(ctime(&now));
 	time.trim();
 	time.substring(11,16).toCharArray(time_value, 10); 
+
+	char timeStr[20];
+	time.toCharArray(timeStr, 16);
 
 	//printString(6,8, time_value,2);
 }
