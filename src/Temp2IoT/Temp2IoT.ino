@@ -16,11 +16,13 @@
 ESP8266WebServer http_rest_server(HTTP_REST_PORT);
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature DS18B20(&oneWire);
-char TemperatureStr[6];
+char TemperatureStr0[6];
+char TemperatureStr1[6];
 unsigned int SecureCounter;
 
 
-int init_wifi() {
+int init_wifi()
+{
     int retries = 0;
 
     Serial.println("Connecting to WiFi AP..........");
@@ -36,56 +38,74 @@ int init_wifi() {
     return WiFi.status(); // return the WiFi connection status
 }
 
-void readTemperature() {
+void readTemperature()
+{
     Serial.println("Reading");
     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
-    float temp;
+    float temp0;
+    float temp1;
     int cnt = 3; //retry counter
-    do {
-       if (cnt <= 0) {
-          String nanStr = "NaN";
-          nanStr.toCharArray(TemperatureStr, 6);
-          break;
-       }
-       DS18B20.requestTemperatures(); 
-       temp = DS18B20.getTempCByIndex(0);
-       
-       dtostrf(temp, 2, 2, TemperatureStr);
-       delay(100);
-       cnt--;
-    } while (temp == 85.0 || temp == (-127.0));
+    do
+    {
+        if (cnt <= 0)
+        {
+            String nanStr = "NaN";
+            nanStr.toCharArray(TemperatureStr0, 6);
+            nanStr.toCharArray(TemperatureStr1, 6);
+            break;
+        }
+        DS18B20.requestTemperatures(); 
+        temp0 = DS18B20.getTempCByIndex(0);
+        temp1 = DS18B20.getTempCByIndex(1);
+
+        Serial.print("T_0 = ");
+        Serial.println(temp0);
+        Serial.print("T_1 = ");
+        Serial.println(temp1);
+        dtostrf(temp0, 2, 2, TemperatureStr0);
+        dtostrf(temp1, 2, 2, TemperatureStr1);
+        delay(100);
+        cnt--;
+    } while (temp0 == 85.0 || temp0 == (-127.0) || temp0 == (127.94));
+    
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
 }
 
-void getApi() {
+void getApi()
+{
     readTemperature();
     StaticJsonBuffer<200> jsonBuffer;
     JsonObject& jsonObj = jsonBuffer.createObject();
     char JSONmessageBuffer[200];
-  
+
     jsonObj["secure_counter"] = SecureCounter;
     jsonObj["symbol"] = "°C";
-    jsonObj["temperature"] = TemperatureStr;
+    jsonObj["temperature"] = TemperatureStr0;
     jsonObj["unit"] = "Celsius";
+
+
     jsonObj.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
     http_rest_server.send(200, "application/json", JSONmessageBuffer);
 }
 
-void getIndex() {
+void getIndex()
+{
     readTemperature();
     String html = web_ui_html;
-    html.replace("%T%", String(TemperatureStr));
+    html.replace("%T%", String(TemperatureStr0));
     html.replace("%SC%", String(SecureCounter));
     http_rest_server.send(200, "text/html", html);
 }
 
-void config_rest_server_routing() {
+void config_rest_server_routing()
+{
     http_rest_server.on("/", HTTP_GET, getIndex);
     http_rest_server.on("/api", HTTP_GET, getApi);
 }
 
-void setup(void) {
+void setup(void)
+{
     pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
     digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on
     Serial.begin(115200);
@@ -94,13 +114,15 @@ void setup(void) {
     DS18B20.begin();
     SecureCounter = 0;
 
-    if (init_wifi() == WL_CONNECTED) {
-        Serial.print("Connetted to ");
+    if (init_wifi() == WL_CONNECTED)
+    {
+        Serial.print("Connected to ");
         Serial.print(wifi_ssid);
         Serial.print("--- IP: ");
         Serial.println(WiFi.localIP());
     }
-    else {
+    else
+    {
         Serial.print("Error connecting to: ");
         Serial.println(wifi_ssid);
     }
@@ -112,6 +134,7 @@ void setup(void) {
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
 }
 
-void loop(void) {
+void loop(void)
+{
     http_rest_server.handleClient();
 }
