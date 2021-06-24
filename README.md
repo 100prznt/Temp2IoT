@@ -44,6 +44,21 @@ Minimal build up with SMD resistor on the back and only one connected DS18B20.
 
 ## Setup
 
+You have two options to upload the software to the WeMos D1 mini.
+
+### ESP8266 Flasher (Windows)
+
+You can download the compiled Flasher Tool from the GitHub Repository
+* [nodemcu/nodemcu-flasher](https://github.com/nodemcu/nodemcu-flasher)
+
+1. Clone or download the repository
+2. Start the ESP8266Flasher.exe
+3. Select the pre-compiled Temp2IoT binary on the config-tab, find at: `src\Temp2IoT\emp2IoT.ino.d1_mini.bin`
+4. Switch back to the operation-tab and select the right COM-port
+5. Press the Flash-Button
+
+### Arduino IDE
+
 If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropriate setup is required first.
 * [Wiki - Setup Arduino IDE for WeMos D1 mini](https://github.com/100prznt/Temp2IoT/wiki/Setup-Arduino-IDE)
 
