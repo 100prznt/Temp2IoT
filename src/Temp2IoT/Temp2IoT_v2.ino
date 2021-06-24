@@ -36,7 +36,7 @@ https://github.com/jegade/followercounter
 #include "config.h"
 
 
-#define VERSION "0.1"
+#define VERSION "2.0b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3

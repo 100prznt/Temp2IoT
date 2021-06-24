@@ -4,30 +4,30 @@
 Very basic IoT thermometer with REST API and Web-UI. Implemented according to the "KISS" approach - **K**eep **I**t **S**imple and **S**tupid
 
 ## Features
-* Temperature measurement at one measuring points using a DS18B20 sensor
+* Temperature measurement at one measuring points using a DS18B20 sensors
 * Shows the measured values on integrated Web UI
-* REST API for integration with master systems
+* REST API for integration with master systems (e.g. ioBroker)
 
 
 ## Hardware
 
 ### BOM
 
-| Description          | Qty. | Price     | ASIN (partner-link from amazon.de)    |
-|----------------------|------|----------:|---------------------------------------|
-| WeMos D1 mini        | 1    | EUR 6,29  | [B01N9RXGHY](https://amzn.to/3clRAiP) |
-| DS18B20 waterproof   | 1    | EUR 3,25  | [B01MZG48OE](https://amzn.to/2NQUkvc) |
-| Resistor 4K7 (1/4 W) | 1    | EUR 0,99  | [B00IYT46U4](https://amzn.to/2MTAsHd) |
-|----------------------|------|-----------|---------------------------------------|
-| Total                |      | EUR 10,53 |                                       |
+| Description          | Qty.   | Price     | ASIN (partner-link from amazon.de)    |
+|----------------------|--------|----------:|---------------------------------------|
+| WeMos D1 mini        | 1      | EUR 5,99  | [B01N9RXGHY](https://amzn.to/3clRAiP) |
+| DS18B20 waterproof   | 1 or 2 | EUR 3,25  | [B01MZG48OE](https://amzn.to/2NQUkvc) |
+| Resistor 2K2 (0,6 W) | 1      | EUR 0,99  | [B007R3QXUE](https://amzn.to/3ja1jww) |
+|----------------------|--------|-----------|---------------------------------------|
+| Total                |        | EUR 10,23 |                                       |
 
-*quoted prices from 2021/05/20*
+*quoted prices from 2021/06/24*
 
 Also a USB-micro cable and a USB power supply is required
 
 ### Wiring
 
-![Temp2IoT wiring](hardware/temp2iot_wiring.png)
+![Temp2IoT wiring](hardware/temp2iot_wiring_2.png)
 
 ### Power Supply
 :warning: Caution Danger to life :warning:
@@ -40,7 +40,7 @@ Symbol of a short-circuit proof, closed safety transformer
 ### Photos
 
 ![Temp2IoT minimal build up](hardware/hardware_raw.jpg)
-Minimal build up with SMD resistor on the back
+Minimal build up with SMD resistor on the back and only one connected DS18B20. 
 
 ## Setup
 
@@ -48,10 +48,11 @@ If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropr
 * [Wiki - Setup Arduino IDE for WeMos D1 mini](https://github.com/100prznt/Temp2IoT/wiki/Setup-Arduino-IDE)
 
 1. Clone or download the repository
-2. Put your credentials in the `src\Temp2IoT\WifiCredentials.h.template` file and rename the file to `WifiCredentials.h`
-3. Open the `src\Temp2IoT\Temp2IoT.ino` with the Arduino IDE
-4. Compile and upload
-5. Open the serial monitor (in Arduino IDE) to see the WiFi status and the applied IP address
+2. Open the `src\Temp2IoT\Temp2IoT.ino` with the Arduino IDE
+3. Compile and upload
+4. Scan for WiFi networks and try to connect the WiFi with SSID: "Temp2IoT"
+5. Select your local WiFi from the list, enter your passwort an save the configuration
+6. Open the serial monitor (in Arduino IDE) to see the WiFi status and the applied IP address
 
 
 ## REST API
@@ -60,10 +61,23 @@ If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropr
 
 ```
 {
-  "secure_counter": 3,
-  "symbol": "°C",
-  "temperature": "25.63",
-  "unit": "Celsius"
+  "systemname": "Temp2IoT",
+  "secure_counter": 999,
+  "firmware": "2.0a",
+  "sensors": [
+    {
+      "name": "name of sensor 1",
+      "value": "25.44",
+      "unit": "Celsius",
+      "time": "Thu Jun 24 20:15:00 2021"
+    },
+    {
+      "name": "name of sensor 2",
+      "value": "25.25",
+      "unit": "Celsius",
+      "time": "Thu Jun 24 20:15:05 2021"
+    }
+  ]
 }
 ```
 
