@@ -4,14 +4,14 @@ https://github.com/jegade/followercounter
 */
 
 
-#include <FS.h>                    // this needs to be first, or it all crashes and burns...
+#include <FS.h>                   // this needs to be first, or it all crashes and burns...
 
 #include "Arduino.h"
 #include <ESP8266WiFi.h>
-#include "JsonStreamingParser.h"   // Json Streaming Parser  
+#include "JsonStreamingParser.h"  // Json Streaming Parser  
 
-#include <ESP8266HTTPClient.h>     // Web Download
-#include <ESP8266httpUpdate.h>     // Web Updater
+#include <ESP8266HTTPClient.h>    // Web Download
+#include <ESP8266httpUpdate.h>    // Web Updater
 
 #include <ArduinoJson.h>          // ArduinoJSON                 https://github.com/bblanchon/ArduinoJson
 
@@ -36,7 +36,7 @@ https://github.com/jegade/followercounter
 #include "config.h"
 
 
-#define VERSION "2.0b"
+#define VERSION "2.1.08-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -62,11 +62,13 @@ char time_value[20];
 char systemName[20] = "Temp2IoT";
 char temp1Name[20] = "Water Temperature";
 char temp2Name[20] = "Ambient Temperature";
+int colorScheme = 1;
 int sensorCnt = 2;
 bool toggleSensors;
 
 //init up
 char measTime[26] = "Thu Jan  1 00:00:00 1970";
+char primaryColor[8] = "#ff2e64"; //"#1e87f0"
 char htmlBuffer[8000];
 
 // =======================================================================
@@ -85,6 +87,9 @@ void saveConfigCallback()
 void handleRoot()
 {
 	ESPStringTemplate webpage(htmlBuffer, sizeof(htmlBuffer));
+
+	TokenStringPair pair_Style[1];
+	pair_Style[0].setPair("%COLORPRIM%", primaryColor);
 
 	TokenStringPair pair_SystemName[1];
 	pair_SystemName[0].setPair("%NAME%", systemName);
@@ -111,7 +116,7 @@ void handleRoot()
 	itoa(SecureCounter, secureCounterStr, 10);
 	pair_SecureCounter[0].setPair("%SC%", secureCounterStr);
 
-	webpage.add_P(_PAGE_WEBUI_HEAD);
+	webpage.add_P(_PAGE_WEBUI_HEAD, pair_Style, 1);
 
 	webpage.add_P(_PAGE_WEBUI_CARDHEAD, pair_SystemName, 1);
 	
@@ -188,12 +193,15 @@ void handleConfig()
 {
 	ESPStringTemplate webpage(htmlBuffer, sizeof(htmlBuffer));
 
+	TokenStringPair pair_Style[1];
+	pair_Style[0].setPair("%COLORPRIM%", primaryColor);
+
 	TokenStringPair pair[3];
 	pair[0].setPair("%SYSNAME%", systemName);
 	pair[1].setPair("%SENSOR1NAME%", temp1Name);
 	pair[2].setPair("%SENSOR2NAME%", temp2Name);
 
-	webpage.add_P(_PAGE_HEAD);
+	webpage.add_P(_PAGE_HEAD, pair_Style, 1);
 	webpage.add_P(_PAGE_START);
 
 	webpage.add_P(_PAGE_ACTIONS);
@@ -226,10 +234,27 @@ void handleConfig()
 		webpage.add_P(_PAGE_CONFIG_SENSORTOOGLEFALSE);		
 	}
 
-	TokenStringPair intensityPair[1]; 
+
+	switch (colorScheme)
+	{
+		case (2):
+			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_2);	
+		break;
+		case (3):
+			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_3);	
+		break;
+		case (4):
+			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_4);	
+		break;
+		case (5):
+			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_5);	
+		break;
+		default: //1 -> 100prznt
+			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_1);	
+		break;
+	}
 
 
-	intensityPair[0].setPair("%NAME1SENSOR%",temp1Name );
 	webpage.add_P(_PAGE_FOOTER);
 
 	server.send(200, "text/html", htmlBuffer);
@@ -265,6 +290,30 @@ void getConfig()
   	// sensorCnt
 	String sensorCntString = server.arg("sensorCnt");
 	sensorCnt = sensorCntString.toInt();
+
+
+	 // colorScheme
+	String colorSchemeString = server.arg("colorScheme");
+	colorScheme = colorSchemeString.toInt();
+
+	switch (colorScheme)
+	{
+		case 2: //Clasic
+			String("#1e87f0").toCharArray(primaryColor, 8);		
+		break;
+		case 3: //Total
+			String("#30a4a1").toCharArray(primaryColor, 8);		
+		break;
+		case 4: //Power
+			String("#007cbf").toCharArray(primaryColor, 8);	
+		break;
+		case 5: //Sun
+			String("#f08a00").toCharArray(primaryColor, 8);	
+		break;
+		default: //1 -> 100prznt
+			String("#ff2e64").toCharArray(primaryColor, 8);	
+		break;
+	}
 
 	saveConfig();
 
@@ -333,7 +382,7 @@ void setup()
 	Serial.begin(115200);
 
   	// Required for instagram api
-	//client.setInsecure();
+	client.setInsecure();
 
 	pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
     digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on
@@ -384,6 +433,12 @@ void setup()
     			if (!jsonToggleTemps.isNull())
     			{ 
     				toggleSensors = jsonToggleTemps.as<bool>();
+    			}
+
+    			JsonVariant jsonPrimaryColor = json["primaryColor"];
+    			if (!jsonPrimaryColor.isNull())
+    			{
+    				strcpy(primaryColor, json["primaryColor"]);
     			}
     		}
     	}
@@ -488,6 +543,7 @@ void saveConfig() {
 	json["temp2Name"] = temp2Name;
 	json["sensorCnt"] = sensorCnt;
 	json["toggleSensors"] = toggleSensors;
+	json["primaryColor"] = primaryColor;
 
 	File configFile = SPIFFS.open("/config.json", "w");
 
@@ -550,7 +606,7 @@ void update_error(int err)
 void updateFirmware()
 {
 
-	/*ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
+	ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
 
     // Add optional callback notifiers
 	ESPhttpUpdate.onStart(update_started);
@@ -558,7 +614,7 @@ void updateFirmware()
 	ESPhttpUpdate.onProgress(update_progress);
 	ESPhttpUpdate.onError(update_error);
 
-	t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://<URL>Temp2IoT_v2.ino.bin");
+	t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://pool.100prznt.de/temp2iot/bin/release/latest/Temp2IoT.ino.d1_mini.bin");
 
 
 	switch (ret) {
@@ -573,7 +629,7 @@ void updateFirmware()
 		case HTTP_UPDATE_OK:
 		USE_SERIAL.println("HTTP_UPDATE_OK");
 		break;
-	}*/
+	}
 }
 
 //  

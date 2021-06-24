@@ -13,7 +13,7 @@ const char _PAGE_WEBUI_HEAD[] PROGMEM = R"=====(
     {
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
       -webkit-text-size-adjust:100%;
-      background: #1e87f0;
+      background: %COLORPRIM%;
       color:#666;
     }
 
@@ -40,7 +40,7 @@ const char _PAGE_WEBUI_HEAD[] PROGMEM = R"=====(
     }
     .card {
       margin: auto;
-      background: #1e87f0;
+      background: %COLORPRIM%;
       color: #fff;
       width: 400px;
     }
@@ -88,11 +88,15 @@ const char _PAGE_WEBUI_HEAD[] PROGMEM = R"=====(
     .description {
       margin: 0px;
       font-size: 1.5rem;
-      line-height: 1.4;
+      line-height: 1.6;
     }
     .units {
       font-size: 2.5rem;
       line-height: 1.4;
+    }
+    .secondunits {
+      font-size: 1.8rem;
+      line-height: 1;
     }
     .second h1 {
       font-size: 2.9rem;
@@ -148,7 +152,7 @@ const char _PAGE_WEBUI_CARDBODY[] PROGMEM  = R"=====(
           <h1><span id="temperature1">%T1%</span><sup class="units">&deg;C</sup></h1>
           <p class="description">%N1%</p>
           <div class="second">
-            <h1><span id="temperature2">%T2%</span><sup class="units">&deg;C</sup></h1>
+            <h1><span id="temperature2">%T2%</span><sup class="secondunits">&deg;C</sup></h1>
             <p class="description">%N2%</p>
           </div>
         </div>

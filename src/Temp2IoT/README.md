@@ -10,3 +10,4 @@
 | char[20] | temp2Name     |             | "Ambient Temperature" |
 | int      | sensorCnt     |             | 2                     |
 | bool     | toggleSensors |             | `false`               |
+| char[10] | primaryColor  |             | "#1e87f0"             |

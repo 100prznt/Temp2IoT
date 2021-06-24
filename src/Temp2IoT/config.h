@@ -35,7 +35,7 @@ const char _PAGE_HEAD[] PROGMEM = R"=====(
                     display: inline-block; 
                     padding: 5px 12px 3px 12px; 
                     margin: 2px; 
-                    background: #ff2e64;
+                    background: %COLORPRIM%;
                     color: #fff;
                     border: 0;
                     text-decoration: none;
@@ -73,5 +73,56 @@ const char _PAGE_CONFIG_SENSORTOOGLEFALSE[] PROGMEM  = R"=====(<label>Sesoren ta
 
 const char _PAGE_CONFIG_SENSORCNT1[] PROGMEM  = R"=====(<label>Modus</label> <label class="inline"><input type="radio" name="sensorCnt" value="1" checked> Ein Sensor</label> <label  class="inline"><input type="radio" name="sensorCnt" value="2"         > Zwei Sensoren</label>)=====";
 const char _PAGE_CONFIG_SENSORCNT2[] PROGMEM  = R"=====(<label>Modus</label> <label class="inline"><input type="radio" name="sensorCnt" value="1"        > Ein Sensor</label> <label  class="inline"><input type="radio" name="sensorCnt" value="2" checked > Zwei Sensoren</label>)=====";
+
+const char _PAGE_CONFIG_COLORSCHEME_1[] PROGMEM  = R"=====(
+<label>Erscheinungsbild</label>
+<select name="colorScheme">
+<option value="1" selected>100prznt</option>
+<option value="2">Classic</option>
+<option value="3">Total</option>
+<option value="4">Power</option>
+<option value="5">Sun</option>
+</select>
+)=====";
+const char _PAGE_CONFIG_COLORSCHEME_2[] PROGMEM  = R"=====(
+<label>Erscheinungsbild</label>
+<select name="colorScheme">
+<option value="1">100prznt</option>
+<option value="2" selected>Classic</option>
+<option value="3">Total</option>
+<option value="4">Power</option>
+<option value="5">Sun</option>
+</select>
+)=====";
+const char _PAGE_CONFIG_COLORSCHEME_3[] PROGMEM  = R"=====(
+<label>Erscheinungsbild</label>
+<select name="colorScheme">
+<option value="1">100prznt</option>
+<option value="2">Classic</option>
+<option value="3" selected>Total</option>
+<option value="4">Power</option>
+<option value="5">Sun</option>
+</select>
+)=====";
+const char _PAGE_CONFIG_COLORSCHEME_4[] PROGMEM  = R"=====(
+<label>Erscheinungsbild</label>
+<select name="colorScheme">
+<option value="1">100prznt</option>
+<option value="2">Classic</option>
+<option value="3">Total</option>
+<option value="4" selected>Power</option>
+<option value="5">Sun</option>
+</select>
+)=====";
+const char _PAGE_CONFIG_COLORSCHEME_5[] PROGMEM  = R"=====(
+<label>Erscheinungsbild</label>
+<select name="colorScheme">
+<option value="1">100prznt</option>
+<option value="2">Classic</option>
+<option value="3">Total</option>
+<option value="4">Power</option>
+<option value="5" selected>Sun</option>
+</select>
+)=====";
 
 const char _PAGE_FOOTER[] PROGMEM = R"=====(<br />  <br /> <button type="submit">Einstellungen übernehmen</button></form></body></html>)=====";
