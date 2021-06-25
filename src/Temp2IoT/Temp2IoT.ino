@@ -308,7 +308,7 @@ void getConfig()
 			String("#30a4a1").toCharArray(primaryColor, 8);		
 		break;
 		case 4: //Power
-			String("#007cbf").toCharArray(primaryColor, 8);	
+			String("#325c84").toCharArray(primaryColor, 8);	
 		break;
 		case 5: //Sun
 			String("#f08a00").toCharArray(primaryColor, 8);	

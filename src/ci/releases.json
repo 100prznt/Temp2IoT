@@ -1,0 +1,24 @@
+{
+  "lateststable": "",
+  "latest": "2.1.09",
+  "releases": [
+    {
+      "version": "2.1.10",
+      "state": "beta",
+      "date": "Fri Jun 25 17:33:28 2021",
+      "path": "/bin/release/2.1.10-beta/Temp2IoT.ino.d1_mini.bin",
+      "changes": [
+        "Add update management"
+      ]
+    },
+    {
+      "version": "2.1.09",
+      "state": "beta",
+      "date": "Fri Jun 24 22:20:54 2021",
+      "path": "/bin/release/2.1.09-beta/Temp2IoT.ino.d1_mini.bin",
+      "changes": [
+        "Add color schemes"
+      ]
+    }
+  ]
+}
