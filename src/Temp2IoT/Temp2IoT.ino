@@ -36,7 +36,7 @@ https://github.com/jegade/followercounter
 #include "config.h"
 
 
-#define VERSION "2.1.08-b"
+#define VERSION "2.1.09-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -249,6 +249,9 @@ void handleConfig()
 		case (5):
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_5);	
 		break;
+		case (6):
+			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_6);	
+		break;
 		default: //1 -> 100prznt
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_1);	
 		break;
@@ -309,6 +312,9 @@ void getConfig()
 		break;
 		case 5: //Sun
 			String("#f08a00").toCharArray(primaryColor, 8);	
+		break;
+		case 6: //100prznt secondary
+			String("#060d2a").toCharArray(primaryColor, 8);	
 		break;
 		default: //1 -> 100prznt
 			String("#ff2e64").toCharArray(primaryColor, 8);	

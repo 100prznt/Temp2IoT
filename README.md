@@ -114,8 +114,8 @@ Web UI on a smartphone browser
   <br>
   <br>
   <br>
-![Web UI on a desktop browser](docu/setup_desktop.png)
-Setup page on a desktop browser
+![Web setup page on a smartphone browser](docu/setup_smartphone.png)
+Setup page on a smartphone browser
 
 ## Color Scheme
 <img src="docu/Scheme_100prznt.png" alt="Temp2IoT Color Scheme 100prznt" width="260" height="332" />  <img src="docu/Scheme_Classic.png" alt="Temp2IoT Color Scheme CLASSIC" width="260" height="332" />  <img src="docu/Scheme_Total.png" alt="Temp2IoT Color Scheme TOTAL" width="260" height="332" />  <img src="docu/Scheme_Power.png" alt="Temp2IoT Color Scheme POWER" width="260" height="332" />  <img src="docu/Scheme_Sun.png" alt="Temp2IoT Color Scheme SUN" width="260" height="332" />  <img src="docu/Scheme_100przntDark.png" alt="Temp2IoT Color Scheme DARK" width="260" height="332" />

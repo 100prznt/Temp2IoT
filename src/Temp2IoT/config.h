@@ -82,6 +82,7 @@ const char _PAGE_CONFIG_COLORSCHEME_1[] PROGMEM  = R"=====(
 <option value="3">Total</option>
 <option value="4">Power</option>
 <option value="5">Sun</option>
+<option value="6">Dark</option>
 </select>
 )=====";
 const char _PAGE_CONFIG_COLORSCHEME_2[] PROGMEM  = R"=====(
@@ -92,6 +93,7 @@ const char _PAGE_CONFIG_COLORSCHEME_2[] PROGMEM  = R"=====(
 <option value="3">Total</option>
 <option value="4">Power</option>
 <option value="5">Sun</option>
+<option value="6">Dark</option>
 </select>
 )=====";
 const char _PAGE_CONFIG_COLORSCHEME_3[] PROGMEM  = R"=====(
@@ -102,6 +104,7 @@ const char _PAGE_CONFIG_COLORSCHEME_3[] PROGMEM  = R"=====(
 <option value="3" selected>Total</option>
 <option value="4">Power</option>
 <option value="5">Sun</option>
+<option value="6">Dark</option>
 </select>
 )=====";
 const char _PAGE_CONFIG_COLORSCHEME_4[] PROGMEM  = R"=====(
@@ -112,6 +115,7 @@ const char _PAGE_CONFIG_COLORSCHEME_4[] PROGMEM  = R"=====(
 <option value="3">Total</option>
 <option value="4" selected>Power</option>
 <option value="5">Sun</option>
+<option value="6">Dark</option>
 </select>
 )=====";
 const char _PAGE_CONFIG_COLORSCHEME_5[] PROGMEM  = R"=====(
@@ -122,6 +126,18 @@ const char _PAGE_CONFIG_COLORSCHEME_5[] PROGMEM  = R"=====(
 <option value="3">Total</option>
 <option value="4">Power</option>
 <option value="5" selected>Sun</option>
+<option value="6">Dark</option>
+</select>
+)=====";
+const char _PAGE_CONFIG_COLORSCHEME_6[] PROGMEM  = R"=====(
+<label>Erscheinungsbild</label>
+<select name="colorScheme">
+<option value="1">100prznt</option>
+<option value="2">Classic</option>
+<option value="3">Total</option>
+<option value="4">Power</option>
+<option value="5">Sun</option>
+<option value="6" selected>Dark</option>
 </select>
 )=====";
 
