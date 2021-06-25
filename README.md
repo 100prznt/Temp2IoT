@@ -117,6 +117,9 @@ Web UI on a smartphone browser
 ![Web UI on a desktop browser](docu/setup_desktop.png)
 Setup page on a desktop browser
 
+## Color Scheme
+<img src="docu/Scheme_100prznt.png" alt="Temp2IoT Color Scheme 100prznt" width="260" height="332" /><img src="docu/Scheme_Classic.png" alt="Temp2IoT Color Scheme CLASSIC" width="260" height="332" /><img src="docu/Scheme_Total.png" alt="Temp2IoT Color Scheme TOTAL" width="260" height="332" /><img src="docu/Scheme_Sun.png" alt="Temp2IoT Color Scheme SUN" width="260" height="332" /><img src="docu/Scheme_Power.png" alt="Temp2IoT Color Scheme POWER" width="260" height="332" />
+
 ## Enclosure
 In the folder [hardware/enclosure](hardware/enclosure) you will find 2 STL files of a suitable enclosure. If the cover is printed upside-down, you can print the first two layers in a different color to make the Temp2IoT icon stand out better.
 
