@@ -1,52 +1,86 @@
-/*
-This project is based on the architecture and code of @jegade his followercounter.
-https://github.com/jegade/followercounter
-*/
+/**
+ * Temp2IoT
+ * Very basic IoT thermometer with REST API and web UI,
+ * based on ESP8266 hardware (WeMos D1 mini) 
+ *
+ * C++11
+ *
+ * Copyright (C) 2021  Elias Ruemmler
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * @package    Temp2IoT
+ * @author     Elias Ruemmler <e.ruemmler@rc-art.de>
+ * @copyright  2021 RC-Art Solutions
+ * @version    2.1
+ * @link       https://github.com/100prznt/Temp2IoT
+ * @since      2020-06-17
+ *
+ *
+ * The architecture of this project is based on the code of @jegade his followercounter.
+ * https://github.com/jegade/followercounter
+ */
 
 
-#include <FS.h>                   // this needs to be first, or it all crashes and burns...
+#include <FS.h>						// this needs to be first, or it all crashes and burns...
 
 #include "Arduino.h"
 #include <ESP8266WiFi.h>
-#include "JsonStreamingParser.h"  // Json Streaming Parser  
+#include "JsonStreamingParser.h"	// Json Streaming Parser 		https://github.com/squix78/json-streaming-parser
 
-#include <ESP8266HTTPClient.h>    // Web Download
-#include <ESP8266httpUpdate.h>    // Web Updater
+#include <ESP8266HTTPClient.h>		// Web Download
+#include <ESP8266httpUpdate.h>		// Web Updater
 
-#include <ArduinoJson.h>          // ArduinoJSON                 https://github.com/bblanchon/ArduinoJson
+#include <ArduinoJson.h>			// ArduinoJson 					https://github.com/bblanchon/ArduinoJson
 
-#include <DNSServer.h>            // - Local DNS Server used for redirecting all requests to the configuration portal
-#include <ESP8266WebServer.h>     // - Local WebServer used to serve the configuration portal
-#include <WiFiManager.h>          // WifiManager 
+#include <DNSServer.h>				// - Local DNS Server used for redirecting all requests to the configuration portal
+#include <ESP8266WebServer.h>		// - Local WebServer used to serve the configuration portal
+#include <WiFiManager.h>			// WifiManager   				https://github.com/tzapu/WiFiManager
 
 
-#include <NTPClient.h>
+#include <NTPClient.h>				// Connect to a NTP Server		https://github.com/arduino-libraries/NTPClient
 #include <time.h>
 
 #include <Arduino.h>
 
-#include <ESPStringTemplate.h>
+#include <ESPStringTemplate.h>		// ESPStringTemplate			https://github.com/DaleGia/ESPStringTemplate
 
 #include <DallasTemperature.h>
 #include <OneWire.h>
 #include <stdio.h>
+
+#include <ArduinoQueue.h>				// Queue handling library		https://github.com/EinarArnason/ArduinoQueue
 
 
 #include "index.h"
 #include "config.h"
 
 
-#define VERSION "2.1.09-b"
+#define VERSION "2.1.10-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
 
 
-const long interval = 3000 * 1000;  // check every 60 minutes
 unsigned long previousMillis = millis() - 2980 * 1000;
 
 WiFiClientSecure client;
-
 ESP8266WebServer server(80);
 
 
@@ -70,6 +104,16 @@ bool toggleSensors;
 char measTime[26] = "Thu Jan  1 00:00:00 1970";
 char primaryColor[8] = "#ff2e64"; //"#1e87f0"
 char htmlBuffer[8000];
+
+
+
+//data storage for tend analysis
+struct Record {
+	time_t	timestamp;
+	float	measvalue;
+};
+
+ArduinoQueue<Record> measValuesQueue(10);
 
 // =======================================================================
 
@@ -326,7 +370,6 @@ void getConfig()
 	redirectBack();
 }
 
-
 void getReset()
 {
 	redirectBack();
@@ -355,6 +398,8 @@ void readTemperature() {
 	String time = String(ctime(&now));
     time.toCharArray(measTime, 25);
 
+
+
     int cnt = 3; //retry counter
     do {
     	if (cnt <= 0) {
@@ -378,6 +423,10 @@ void readTemperature() {
     	delay(100);
     	cnt--;
     } while (temp1 == 85.0 || temp1 == (-127.0) || temp1 == 127.94);
+
+    Record qRec = { now, temp1 };
+    measValuesQueue.enqueue(qRec);
+
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
 }
@@ -541,7 +590,8 @@ void setup()
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
 }
 
-void saveConfig() {
+void saveConfig()
+{
 	DynamicJsonDocument json(1024);
 
 	json["systemName"] = systemName;
@@ -562,7 +612,8 @@ void saveConfig() {
 	serializeJson(json, configFile);
 }
 
-void infoReset() {
+void infoReset()
+{
 	Serial.println("Format System");
 
     // Reset Wifi-Setting
@@ -574,10 +625,10 @@ void infoReset() {
 
     // Restart
 	ESP.reset();
-
 }
 
-void restartX() {
+void restartX()
+{
 	ESP.reset();
 }
 
@@ -637,8 +688,7 @@ void updateFirmware()
 		break;
 	}
 }
-
-//  
+ 
 void loop()
 {
 	server.handleClient();
@@ -648,6 +698,19 @@ void loop()
 	if (currentMillis % 5000 == 0 )
 	{ 
 		readTemperature();
+
+		USE_SERIAL.print("Queue count: ");
+		USE_SERIAL.println(measValuesQueue.itemCount());
+
+		Record rec = measValuesQueue.getHead();
+
+		USE_SERIAL.print("Last meastime: ");
+		USE_SERIAL.println(rec.timestamp);
+		USE_SERIAL.print("Last measvalue: ");
+		USE_SERIAL.println(rec.measvalue);
+
+		//Geht so nicht... ggf: https://github.com/SMFSW/Queue
+
 	}
 }
 
