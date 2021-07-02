@@ -65,14 +65,14 @@
 #include <OneWire.h>
 #include <stdio.h>
 
-#include <ArduinoQueue.h>				// Queue handling library		https://github.com/EinarArnason/ArduinoQueue
+#include <cppQueue.h>				// Queue handling library		https://github.com/SMFSW/Queue
 
 
 #include "index.h"
 #include "config.h"
 
 
-#define VERSION "2.1.10-b"
+#define VERSION "2.1.11-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -108,12 +108,14 @@ char htmlBuffer[8000];
 
 
 //data storage for tend analysis
-struct Record {
+#define	IMPLEMENTATION FIFO
+struct strRec {
 	time_t	timestamp;
 	float	measvalue;
-};
+} Rec;
 
-ArduinoQueue<Record> measValuesQueue(10);
+
+cppQueue q(sizeof(Rec), 10, IMPLEMENTATION, true);	//Init queue
 
 // =======================================================================
 
@@ -424,8 +426,8 @@ void readTemperature() {
     	cnt--;
     } while (temp1 == 85.0 || temp1 == (-127.0) || temp1 == 127.94);
 
-    Record qRec = { now, temp1 };
-    measValuesQueue.enqueue(qRec);
+    strRec rec = { now, temp1 };
+    q.push(&rec);
 
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
@@ -700,17 +702,32 @@ void loop()
 		readTemperature();
 
 		USE_SERIAL.print("Queue count: ");
-		USE_SERIAL.println(measValuesQueue.itemCount());
+		USE_SERIAL.println(q.getCount());
 
-		Record rec = measValuesQueue.getHead();
+		strRec cRec;
+		q.peekPrevious(&cRec);
 
 		USE_SERIAL.print("Last meastime: ");
-		USE_SERIAL.println(rec.timestamp);
+		String time = String(ctime(&cRec.timestamp));
+		time.trim();
+		USE_SERIAL.println(time);
 		USE_SERIAL.print("Last measvalue: ");
-		USE_SERIAL.println(rec.measvalue);
+		USE_SERIAL.println(cRec.measvalue);
 
-		//Geht so nicht... ggf: https://github.com/SMFSW/Queue
+		//Meanvalue calculation
+		float sum = 0;
+		int cnt = q.getCount();
+		for (int i = 0; i < cnt; i++)
+		{
+			strRec cRec;
+			q.peekIdx(&cRec, i);
 
+			sum = sum + cRec.measvalue;
+		}
+		float meanValue = sum / cnt;
+
+		USE_SERIAL.print("Meanvalue: ");
+		USE_SERIAL.println(meanValue);
 	}
 }
 
