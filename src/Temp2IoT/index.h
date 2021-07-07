@@ -8,6 +8,7 @@ const char _PAGE_WEBUI_HEAD[] PROGMEM = R"=====(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Temp2IoT</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any">
   <style type="text/css">
     html
     {

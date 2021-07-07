@@ -70,9 +70,10 @@
 
 #include "index.h"
 #include "config.h"
+#include "favicon.h"
 
 
-#define VERSION "2.1.11-b"
+#define VERSION "2.2.01-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -88,6 +89,9 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature DS18B20(&oneWire);
 char Temperature1Str[6] = "NaN";
 char Temperature2Str[6] = "NaN";
+float MeasValue1;
+float MeasValue2;
+
 unsigned int SecureCounter;
 
 char time_value[20];
@@ -114,8 +118,8 @@ struct strRec {
 	float	measvalue;
 } Rec;
 
-
-cppQueue q(sizeof(Rec), 10, IMPLEMENTATION, true);	//Init queue
+cppQueue queue_MeasValues(sizeof(Rec), 1440, IMPLEMENTATION, true);	//Init queue; 1440 min = 24 h
+float MeasValueMean;
 
 // =======================================================================
 
@@ -188,6 +192,11 @@ void handleRoot()
 	server.send(200, "text/html", htmlBuffer);
 }
 
+void handleFaviconSvg()
+{
+	server.send(200, "image/svg+xml", _FAVICON_SVG_WHITE);
+}
+
 void handleApi()
 {
 	char JSONmessageBuffer[1024];
@@ -201,6 +210,8 @@ void handleApi()
 	{
 		doc["sensors"][1] = getData(2);
 	}
+
+	doc["test_mean"] = getData_MeanValue(1);
 
 	serializeJsonPretty(doc, JSONmessageBuffer);
 
@@ -216,13 +227,29 @@ DynamicJsonDocument getData(int idx)
 		case 1:
 		{
 			doc["name"] = temp1Name;
-			doc["value"] = Temperature1Str;
+			doc["value"] = MeasValue1;
+			if (!toggleSensors)
+			{
+				doc["mean"] = MeasValueMean;
+			}
+			else
+			{
+				doc["mean"] = "NaN";
+			}
 		}
 		break;
 		case 2:
 		{
 			doc["name"] = temp2Name;
-			doc["value"] = Temperature2Str;
+			doc["value"] = MeasValue2;
+			if (toggleSensors)
+			{
+				doc["mean"] = MeasValueMean;
+			}
+			else
+			{
+				doc["mean"] = "NaN";
+			}
 		}
 		break;
 		default:
@@ -233,6 +260,51 @@ DynamicJsonDocument getData(int idx)
 	doc["time"] = measTime;
 
 	return doc;
+}
+
+DynamicJsonDocument getData_MeanValue(int period)
+{
+	int periodSec = period * 3600; //to [sec]
+	
+	periodSec = 100;
+
+	//Generate period start time
+	time_t now = time(nullptr);
+	unsigned long startTime = now - periodSec;
+
+
+
+
+	//Meanvalue calculation
+	float sum = 0;
+	bool inTimeRange = false;
+	int cnt_MeasValues_InUse = 0;
+	int cnt_MeasValues = queue_MeasValues.getCount();
+	for (int i = 0; i < cnt_MeasValues; i++)
+	{
+		strRec cRec;
+		queue_MeasValues.peekIdx(&cRec, i);
+
+		if (inTimeRange || cRec.timestamp > startTime)
+		{
+			inTimeRange = true;
+		
+			cnt_MeasValues_InUse++;
+			sum = sum + cRec.measvalue;
+		}
+	}
+
+	DynamicJsonDocument doc(1024);
+
+	doc["count"] = cnt_MeasValues_InUse;
+	doc["value"] = sum / cnt_MeasValues_InUse;
+
+	doc["period"] = periodSec;
+
+
+
+	return doc;
+
 }
 
 void handleConfig()
@@ -326,13 +398,16 @@ void getConfig()
 
 
 	String toggleSensorsString = server.arg("toggleSensors");
+	bool buffer = false;
 	if (toggleSensorsString == "on")
 	{
-		toggleSensors = true;
+		buffer = true;
 	}
-	else
+
+	if (buffer != toggleSensors)
 	{
-		toggleSensors = false;
+		queue_MeasValues.clean();
+		toggleSensors = buffer;
 	}
 
 
@@ -393,8 +468,8 @@ void getFormat()
 void readTemperature() {
 	Serial.println("Start new reading on 1-Wire bus...");
     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
-    float temp1;
-    float temp2;
+    //float temp1;
+    //float temp2;
 
     time_t now = time(nullptr);
 	String time = String(ctime(&now));
@@ -411,23 +486,41 @@ void readTemperature() {
     		break;
     	}
     	DS18B20.requestTemperatures(); 
-    	temp1 = DS18B20.getTempCByIndex(0);
-    	dtostrf(temp1, 2, 2, Temperature1Str);
+    	MeasValue1 = DS18B20.getTempCByIndex(0);
+    	dtostrf(MeasValue1, 2, 2, Temperature1Str);
     	if (sensorCnt > 1)
     	{
-    		temp2 = DS18B20.getTempCByIndex(1);
-    		if (temp2 != 127.94)
+    		MeasValue2 = DS18B20.getTempCByIndex(1);
+    		if (MeasValue2 != 127.94)
     		{
-    			dtostrf(temp2, 2, 2, Temperature2Str);
+    			dtostrf(MeasValue2, 2, 2, Temperature2Str);
     		}
     	}
 
     	delay(100);
     	cnt--;
-    } while (temp1 == 85.0 || temp1 == (-127.0) || temp1 == 127.94);
+    } while (MeasValue1 == 85.0 || MeasValue1 == (-127.0) || MeasValue1 == 127.94);
 
-    strRec rec = { now, temp1 };
-    q.push(&rec);
+
+    strRec rec = { now, MeasValue1 };
+    if (toggleSensors)
+    {
+    	rec = {now, MeasValue2 };
+    }
+    queue_MeasValues.push(&rec);
+
+
+	//Meanvalue calculation
+	float sum = 0;
+	int cnt_MeasValues = queue_MeasValues.getCount();
+	for (int i = 0; i < cnt_MeasValues; i++)
+	{
+		strRec cRec;
+		queue_MeasValues.peekIdx(&cRec, i);
+		sum = sum + cRec.measvalue;
+	}
+	MeasValueMean = sum / cnt_MeasValues;
+
 
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
@@ -540,7 +633,8 @@ void setup()
     delay(500);
 
 
-    configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+    //configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+    configTime(0, 0, "pool.ntp.org", "192.168.0.41");
   	setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 0);  // https://github.com/nayarsystems/posix_tz_db 
 
 	//set config save notify callback
@@ -551,6 +645,7 @@ void setup()
 
 
   	server.on("/", handleRoot);
+  	server.on("/favicon.svg", handleFaviconSvg);
   	server.on("/format", getFormat);
   	server.on("/update", getUpdate);
   	server.on("/reset", getReset);
@@ -701,33 +796,34 @@ void loop()
 	{ 
 		readTemperature();
 
-		USE_SERIAL.print("Queue count: ");
-		USE_SERIAL.println(q.getCount());
+		/*USE_SERIAL.print("Queue count: ");
+		USE_SERIAL.println(queue_MeasValues.getCount());
 
 		strRec cRec;
-		q.peekPrevious(&cRec);
+		queue_MeasValues.peekPrevious(&cRec);
 
 		USE_SERIAL.print("Last meastime: ");
-		String time = String(ctime(&cRec.timestamp));
-		time.trim();
-		USE_SERIAL.println(time);
+		String timeStamp = String(ctime(&cRec.timestamp));
+		timeStamp.trim();
+		USE_SERIAL.println(timeStamp);
 		USE_SERIAL.print("Last measvalue: ");
 		USE_SERIAL.println(cRec.measvalue);
 
 		//Meanvalue calculation
 		float sum = 0;
-		int cnt = q.getCount();
+		int cnt = queue_MeasValues.getCount();
 		for (int i = 0; i < cnt; i++)
 		{
 			strRec cRec;
-			q.peekIdx(&cRec, i);
+			queue_MeasValues.peekIdx(&cRec, i);
 
 			sum = sum + cRec.measvalue;
 		}
 		float meanValue = sum / cnt;
 
 		USE_SERIAL.print("Meanvalue: ");
-		USE_SERIAL.println(meanValue);
+		USE_SERIAL.println(meanValue);*/
+
 	}
 }
 

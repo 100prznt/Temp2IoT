@@ -3,6 +3,7 @@ const char _PAGE_HEAD[] PROGMEM = R"=====(
 <html lang="de">
     <head>
             <title>Temp2IoT - Einstellungen</title>
+            <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any">
             <style>
                 html {
                     font-size: 70%;
