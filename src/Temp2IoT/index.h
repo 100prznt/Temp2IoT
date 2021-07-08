@@ -59,6 +59,11 @@ const char _PAGE_WEBUI_HEAD[] PROGMEM = R"=====(
       font-size: 2.0rem;
       line-height: 1.4;
     }
+    .card-header a{
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+    }
     .card-body h1 {
       font-size: 5rem;
       line-height: 0.8;
@@ -119,6 +124,7 @@ const char _PAGE_WEBUI_CARDHEAD[] PROGMEM  = R"=====(
         <div class="card-header">
           <h2>
             <span class="icon" style="position: relative; bottom: -7px;">
+            <a title="Einstellungen öffnen" href="/setup">
               <svg vwidth="32" height="32" viewBox="0 0 512 512">
               <path d="M227.89,331.58V77.15c0-31.56-25.59-57.15-57.15-57.15s-57.15,25.59-57.15,57.15v254.43
                 c-11.85,13.43-19.05,31.06-19.05,50.37c0,42.08,34.12,76.2,76.2,76.2s76.2-34.12,76.2-76.2
@@ -135,6 +141,7 @@ const char _PAGE_WEBUI_CARDHEAD[] PROGMEM  = R"=====(
                 c-11.38,6.59-19.05,18.87-19.05,32.96c0,21.04,17.06,38.1,38.1,38.1s38.1-17.06,38.1-38.1
                 C208.84,367.86,201.17,355.58,189.79,348.99z"/>
             </svg>
+            </a>
             </span>
             %NAME%
           </h2>

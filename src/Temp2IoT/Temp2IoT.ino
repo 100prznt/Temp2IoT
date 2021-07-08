@@ -73,7 +73,7 @@
 #include "favicon.h"
 
 
-#define VERSION "2.2.03-b"
+#define VERSION "2.2.04-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -305,20 +305,21 @@ void handleConfig()
 	TokenStringPair pair_Style[1];
 	pair_Style[0].setPair("%COLORPRIM%", primaryColor);
 
-	TokenStringPair pair[4];
+	TokenStringPair pair[5];
 	pair[0].setPair("%SYSNAME%", systemName);
-	pair[1].setPair("%SENSOR1NAME%", temp1Name);
-	pair[2].setPair("%SENSOR2NAME%", temp2Name);
-	pair[3].setPair("%NTPSERVER%", ntpServer);
+	pair[1].setPair("%VERSION%", VERSION);
+	pair[2].setPair("%SENSOR1NAME%", temp1Name);
+	pair[3].setPair("%SENSOR2NAME%", temp2Name);
+	pair[4].setPair("%NTPSERVER%", ntpServer);
 
 	webpage.add_P(_PAGE_HEAD, pair_Style, 1);
-	webpage.add_P(_PAGE_START);
+	webpage.add_P(_PAGE_START), pair, 2;
 
 	webpage.add_P(_PAGE_ACTIONS);
 
 	webpage.add_P(_PAGE_CONFIG_SYSNAME, pair, 1);
-	webpage.add_P(_PAGE_CONFIG_SENSOR1NAME, pair, 2);
-	webpage.add_P(_PAGE_CONFIG_SENSOR2NAME, pair, 3);
+	webpage.add_P(_PAGE_CONFIG_SENSOR1NAME, pair, 3);
+	webpage.add_P(_PAGE_CONFIG_SENSOR2NAME, pair, 4);
 
 	switch (sensorCnt)
 	{
@@ -367,7 +368,7 @@ void handleConfig()
 		break;
 	}
 
-	webpage.add_P(_PAGE_CONFIG_NTP, pair, 4);
+	webpage.add_P(_PAGE_CONFIG_NTP, pair, 5);
 
 	webpage.add_P(_PAGE_FOOTER);
 
