@@ -28,7 +28,7 @@
  * @package    Temp2IoT
  * @author     Elias Ruemmler <e.ruemmler@rc-art.de>
  * @copyright  2021 RC-Art Solutions
- * @version    2.1
+ * @version    2.2
  * @link       https://github.com/100prznt/Temp2IoT
  * @since      2020-06-17
  *
@@ -73,7 +73,7 @@
 #include "favicon.h"
 
 
-#define VERSION "2.2.01-b"
+#define VERSION "2.2.03-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -103,6 +103,7 @@ char temp2Name[20] = "Ambient Temperature";
 int colorScheme = 1;
 int sensorCnt = 2;
 bool toggleSensors;
+char ntpServer[20] = "time.nist.gov";
 
 //init up
 char measTime[26] = "Thu Jan  1 00:00:00 1970";
@@ -120,6 +121,7 @@ struct strRec {
 
 cppQueue queue_MeasValues(sizeof(Rec), 1440, IMPLEMENTATION, true);	//Init queue; 1440 min = 24 h
 float MeasValueMean;
+int cnt_Readings = 12;
 
 // =======================================================================
 
@@ -130,7 +132,7 @@ bool shouldSaveConfig = true;
 //callback notifying us of the need to save config
 void saveConfigCallback()
 {
-	Serial.println("Should save config");
+	USE_SERIAL.println("Should save config");
 	shouldSaveConfig = true;
 }
 
@@ -211,9 +213,7 @@ void handleApi()
 		doc["sensors"][1] = getData(2);
 	}
 
-	doc["test_mean"] = getData_MeanValue(1);
-
-	serializeJsonPretty(doc, JSONmessageBuffer);
+	serializeJson(doc, JSONmessageBuffer);
 
 	server.send(200, "application/json", JSONmessageBuffer);
 }
@@ -230,11 +230,8 @@ DynamicJsonDocument getData(int idx)
 			doc["value"] = MeasValue1;
 			if (!toggleSensors)
 			{
-				doc["mean"] = MeasValueMean;
-			}
-			else
-			{
-				doc["mean"] = "NaN";
+				doc["mean-1"] = getData_MeanValue(1);
+				doc["mean-24"] = getData_MeanValue(24);
 			}
 		}
 		break;
@@ -244,11 +241,8 @@ DynamicJsonDocument getData(int idx)
 			doc["value"] = MeasValue2;
 			if (toggleSensors)
 			{
-				doc["mean"] = MeasValueMean;
-			}
-			else
-			{
-				doc["mean"] = "NaN";
+				doc["mean-1"] = getData_MeanValue(1);
+				doc["mean-24"] = getData_MeanValue(24);
 			}
 		}
 		break;
@@ -266,13 +260,10 @@ DynamicJsonDocument getData_MeanValue(int period)
 {
 	int periodSec = period * 3600; //to [sec]
 	
-	periodSec = 100;
 
 	//Generate period start time
 	time_t now = time(nullptr);
 	unsigned long startTime = now - periodSec;
-
-
 
 
 	//Meanvalue calculation
@@ -314,10 +305,11 @@ void handleConfig()
 	TokenStringPair pair_Style[1];
 	pair_Style[0].setPair("%COLORPRIM%", primaryColor);
 
-	TokenStringPair pair[3];
+	TokenStringPair pair[4];
 	pair[0].setPair("%SYSNAME%", systemName);
 	pair[1].setPair("%SENSOR1NAME%", temp1Name);
 	pair[2].setPair("%SENSOR2NAME%", temp2Name);
+	pair[3].setPair("%NTPSERVER%", ntpServer);
 
 	webpage.add_P(_PAGE_HEAD, pair_Style, 1);
 	webpage.add_P(_PAGE_START);
@@ -375,6 +367,7 @@ void handleConfig()
 		break;
 	}
 
+	webpage.add_P(_PAGE_CONFIG_NTP, pair, 4);
 
 	webpage.add_P(_PAGE_FOOTER);
 
@@ -422,7 +415,7 @@ void getConfig()
 
 	switch (colorScheme)
 	{
-		case 2: //Clasic
+		case 2: //Classic
 			String("#1e87f0").toCharArray(primaryColor, 8);		
 		break;
 		case 3: //Total
@@ -441,6 +434,9 @@ void getConfig()
 			String("#ff2e64").toCharArray(primaryColor, 8);	
 		break;
 	}
+
+  	String ntpServerString = server.arg("ntpServer");
+  	ntpServerString.toCharArray(ntpServer,20);
 
 	saveConfig();
 
@@ -466,7 +462,7 @@ void getFormat()
 }
 
 void readTemperature() {
-	Serial.println("Start new reading on 1-Wire bus...");
+	//USE_SERIAL.println("Start new reading on 1-Wire bus...");
     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
     //float temp1;
     //float temp2;
@@ -501,26 +497,29 @@ void readTemperature() {
     	cnt--;
     } while (MeasValue1 == 85.0 || MeasValue1 == (-127.0) || MeasValue1 == 127.94);
 
-
-    strRec rec = { now, MeasValue1 };
-    if (toggleSensors)
+	cnt_Readings++;
+    if (cnt_Readings >= 12)
     {
-    	rec = {now, MeasValue2 };
-    }
-    queue_MeasValues.push(&rec);
-
-
-	//Meanvalue calculation
-	float sum = 0;
-	int cnt_MeasValues = queue_MeasValues.getCount();
-	for (int i = 0; i < cnt_MeasValues; i++)
-	{
-		strRec cRec;
-		queue_MeasValues.peekIdx(&cRec, i);
-		sum = sum + cRec.measvalue;
-	}
-	MeasValueMean = sum / cnt_MeasValues;
-
+    	USE_SERIAL.println("store measvalue in trend queue");
+	    strRec rec = { now, MeasValue1 };
+	    if (toggleSensors)
+	    {
+	    	rec = {now, MeasValue2 };
+	    }
+	    queue_MeasValues.push(&rec);
+	    cnt_Readings = 0;
+	
+		//Meanvalue calculation
+		float sum = 0;
+		int cnt_MeasValues = queue_MeasValues.getCount();
+		for (int i = 0; i < cnt_MeasValues; i++)
+		{
+			strRec cRec;
+			queue_MeasValues.peekIdx(&cRec, i);
+			sum = sum + cRec.measvalue;
+		}
+		MeasValueMean = sum / cnt_MeasValues;
+}
 
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
@@ -529,24 +528,40 @@ void readTemperature() {
 void setup()
 {
   	// Serial debugging
-	Serial.begin(115200);
+	USE_SERIAL.begin(115200);
+	delay(500);
 
-  	// Required for instagram api
-	client.setInsecure();
+	USE_SERIAL.println("");
+	USE_SERIAL.println(R"=====(       _____               ___ ___    _____       )=====");
+	USE_SERIAL.println(R"=====(      |_   _|__ _ __  _ __|_  )_ _|__|_   _|      )=====");
+	USE_SERIAL.println(R"=====(        | |/ -_) '  \| '_ \/ / | |/ _ \| |        )=====");
+	USE_SERIAL.println(R"=====(        |_|\___|_|_|_| .__/___|___\___/|_|        )=====");
+	USE_SERIAL.println(R"=====(                     |_|                          )=====");
+	USE_SERIAL.println("");
+	USE_SERIAL.println(R"=====(**************************************************)=====");
+	USE_SERIAL.println(R"=====(       a 100prznt.de project by E. Ruemmler       )=====");
+	USE_SERIAL.print(R"=====(                      v)=====");
+	USE_SERIAL.println(VERSION);
+	USE_SERIAL.println("");
+	
+	USE_SERIAL.println("Setting up...");
 
 	pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
     digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on
 
+  	// Required for instagram api
+	client.setInsecure();
 
     if (SPIFFS.begin())
     {
-    	if (SPIFFS.exists("/config.json")) {
+    	if (SPIFFS.exists("/config.json"))
+    	{
       	//file exists, reading and loading
 
     		File configFile = SPIFFS.open("/config.json", "r");
     		if (configFile)
     		{
-    			Serial.println("opened config file");
+    			USE_SERIAL.println("opened config file");
     			size_t size = configFile.size();
         		// Allocate a buffer to store contents of the file.
     			std::unique_ptr<char[]> buf(new char[size]);
@@ -589,8 +604,53 @@ void setup()
     			if (!jsonPrimaryColor.isNull())
     			{
     				strcpy(primaryColor, json["primaryColor"]);
+    			} 
+    			JsonVariant jsonNtpServer = json["ntpServer"];
+    			if (!jsonNtpServer.isNull())
+    			{
+    				strcpy(ntpServer, json["ntpServer"]);
+    			} 
+
+				USE_SERIAL.println();
+    			USE_SERIAL.print("primaryColor: ");
+    			USE_SERIAL.println(primaryColor);
+
+    			if (strcmp(primaryColor, "#1e87f0") == 0)
+    			{
+    				colorScheme = 2;
     			}
+    			else if (strcmp(primaryColor, "#30a4a1") == 0)
+    			{
+    				colorScheme = 3;
+    			}
+    			else if (strcmp(primaryColor, "#325c84") == 0)
+    			{
+    				colorScheme = 4;
+    			}
+    			else if (strcmp(primaryColor, "#f08a00") == 0)
+    			{
+    				colorScheme = 5;
+    			}
+    			else if (strcmp(primaryColor, "#060d2a") == 0)
+    			{
+    				colorScheme = 6;
+    			}
+    			else
+				{
+    				colorScheme = 1;
+    			}
+
+    			USE_SERIAL.print("colorScheme: ");
+    			USE_SERIAL.println(colorScheme);
     		}
+    		else
+			{
+				USE_SERIAL.println("failed to open /config.json");
+			}
+    	}
+    	else
+    	{
+    		USE_SERIAL.println("/config.json not found");
     	}
     }
     else
@@ -632,9 +692,9 @@ void setup()
 
     delay(500);
 
-
+	//ToDo: Check cust. ntp server address
     //configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-    configTime(0, 0, "pool.ntp.org", "192.168.0.41");
+    configTime(0, 0, ntpServer, "pool.ntp.org", "time.nist.gov");
   	setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 0);  // https://github.com/nayarsystems/posix_tz_db 
 
 	//set config save notify callback
@@ -697,6 +757,7 @@ void saveConfig()
 	json["sensorCnt"] = sensorCnt;
 	json["toggleSensors"] = toggleSensors;
 	json["primaryColor"] = primaryColor;
+	json["ntpServer"] = ntpServer;
 
 	File configFile = SPIFFS.open("/config.json", "w");
 
@@ -823,6 +884,8 @@ void loop()
 
 		USE_SERIAL.print("Meanvalue: ");
 		USE_SERIAL.println(meanValue);*/
+
+
 
 	}
 }
