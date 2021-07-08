@@ -18,7 +18,7 @@
 | # | scheme   | primary color |
 |:--|:---------|:--------------|
 | 1 | 100prznt | ![ff2e64](https://img.shields.io/static/v1?message=ff2e64&color=ff2e64&style=flat-square) |
-| 2 | Classic  | #1e87f0       |
+| 2 | Classic  | ![#1e87f0](https://img.shields.io/badge/-1e87f0-1e87f0)       |
 | 3 | Total    | #30a4a1       |
 | 4 | Power    | #325c84       |
 | 5 | Sun      | #f08a00       |
