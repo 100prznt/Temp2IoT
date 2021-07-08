@@ -69,8 +69,8 @@ const char _PAGE_CONFIG_SYSNAME[] PROGMEM  = R"=====(<label>Gerätename (Übersc
 const char _PAGE_CONFIG_SENSOR1NAME[] PROGMEM  = R"=====(<label>Bezeichnung Sensor 1</label> <input type="text" name="temp1Name" value="%SENSOR1NAME%" >)=====";
 const char _PAGE_CONFIG_SENSOR2NAME[] PROGMEM  = R"=====(<label>Bezeichnung Sensor 2</label> <input type="text" name="temp2Name" value="%SENSOR2NAME%" >)=====";
 
-const char _PAGE_CONFIG_SENSORTOOGLETRUE[] PROGMEM   = R"=====(<label>Sesoren tauschen</label> <input type="checkbox" name="toggleSensors" checked >)=====";
-const char _PAGE_CONFIG_SENSORTOOGLEFALSE[] PROGMEM  = R"=====(<label>Sesoren tauschen</label> <input type="checkbox" name="toggleSensors" >)=====";
+const char _PAGE_CONFIG_SENSORTOOGLETRUE[] PROGMEM   = R"=====(<label>Sensoren tauschen</label> <input type="checkbox" name="toggleSensors" checked >)=====";
+const char _PAGE_CONFIG_SENSORTOOGLEFALSE[] PROGMEM  = R"=====(<label>Sensoren tauschen</label> <input type="checkbox" name="toggleSensors" >)=====";
 
 const char _PAGE_CONFIG_SENSORCNT1[] PROGMEM  = R"=====(<label>Modus</label> <label class="inline"><input type="radio" name="sensorCnt" value="1" checked> Ein Sensor</label> <label  class="inline"><input type="radio" name="sensorCnt" value="2"         > Zwei Sensoren</label>)=====";
 const char _PAGE_CONFIG_SENSORCNT2[] PROGMEM  = R"=====(<label>Modus</label> <label class="inline"><input type="radio" name="sensorCnt" value="1"        > Ein Sensor</label> <label  class="inline"><input type="radio" name="sensorCnt" value="2" checked > Zwei Sensoren</label>)=====";
@@ -142,4 +142,14 @@ const char _PAGE_CONFIG_COLORSCHEME_6[] PROGMEM  = R"=====(
 </select>
 )=====";
 
-const char _PAGE_FOOTER[] PROGMEM = R"=====(<br />  <br /> <button type="submit">Einstellungen übernehmen</button></form></body></html>)=====";
+const char _PAGE_CONFIG_NTP[] PROGMEM  = R"=====(<label>NTP Server</label> <input type="text" name="ntpServer" value="%NTPSERVER%" >)=====";
+
+const char _PAGE_FOOTER[] PROGMEM = R"=====(<br />  <br /> <button type="submit">Einstellungen übernehmen</button></form>
+<label>Links</label>
+<a href="https://github.com/100prznt/Temp2IoT" target="_blank">Temp2IoT Repository</a>
+<a href="https://100prznt.de/" target="_blank">100prznt.de</a>
+<a href="/api" target="_blank">API</a>
+<a href="/">WebUI</a>
+
+</body>
+</html>)=====";
