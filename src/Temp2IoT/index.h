@@ -1,5 +1,5 @@
-//PROGMEM <- ablage im Flash
-//R <- RawString
+//PROGMEM <- Ablage im Flash
+//R"=====(  )=====" <- RawString
 
 const char _PAGE_WEBUI_HEAD[] PROGMEM = R"=====(
 <!DOCTYPE html>
