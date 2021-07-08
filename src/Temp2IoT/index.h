@@ -8,6 +8,7 @@ const char _PAGE_WEBUI_HEAD[] PROGMEM = R"=====(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Temp2IoT</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any">
   <style type="text/css">
     html
     {
@@ -194,8 +195,8 @@ const char _PAGE_WEBUI_FOOTER_SCRIPT2[] PROGMEM  = R"=====(
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("temperature1").innerHTML = JSON.parse(this.responseText).sensors[0].value;
-        document.getElementById("temperature2").innerHTML = JSON.parse(this.responseText).sensors[1].value;
+        document.getElementById("temperature1").innerHTML = (JSON.parse(this.responseText).sensors[0].value).toFixed(2);
+        document.getElementById("temperature2").innerHTML = (JSON.parse(this.responseText).sensors[1].value).toFixed(2);
         document.getElementById("secure-counter").innerHTML = JSON.parse(this.responseText).secure_counter;
       }
     };
