@@ -460,6 +460,7 @@ void readTemperature() {
     		nanStr.toCharArray(Temperature2Str, 6);
     		break;
     	}
+
     	DS18B20.requestTemperatures(); 
     	MeasValue1 = DS18B20.getTempCByIndex(0);
     	dtostrf(MeasValue1, 2, 2, Temperature1Str);
@@ -477,7 +478,7 @@ void readTemperature() {
 	cnt_Readings++;
     if (cnt_Readings >= 12)
     {
-    	USE_SERIAL.println("   Store received measvalue in trend queue");
+    	USE_SERIAL.println("# Store received measvalue in trend queue");
 	    strRec rec = { now, MeasValue1 };
 	    if (toggleSensors)
 	    	rec = {now, MeasValue2 };
@@ -507,14 +508,14 @@ void setup()
 	delay(500);
 
 	USE_SERIAL.println();
-	USE_SERIAL.println(R"=====(       _____               ___ ___    _____       )=====");
-	USE_SERIAL.println(R"=====(      |_   _|__ _ __  _ __|_  )_ _|__|_   _|      )=====");
-	USE_SERIAL.println(R"=====(        | |/ -_) '  \| '_ \/ / | |/ _ \| |        )=====");
-	USE_SERIAL.println(R"=====(        |_|\___|_|_|_| .__/___|___\___/|_|        )=====");
-	USE_SERIAL.println(R"=====(                     |_|                          )=====");
+	USE_SERIAL.println(R"=====(       _____               ___ ___    _____        )=====");
+	USE_SERIAL.println(R"=====(      |_   _|__ _ __  _ __|_  )_ _|__|_   _|       )=====");
+	USE_SERIAL.println(R"=====(        | |/ -_) '  \| '_ \/ / | |/ _ \| |         )=====");
+	USE_SERIAL.println(R"=====(        |_|\___|_|_|_| .__/___|___\___/|_|         )=====");
+	USE_SERIAL.println(R"=====(                     |_|                           )=====");
 	USE_SERIAL.println();
-	USE_SERIAL.println(R"=====(**************************************************)=====");
-	USE_SERIAL.println(R"=====(       a 100prznt.de project by E. Ruemmler       )=====");
+	USE_SERIAL.println(R"=====(***************************************************)=====");
+	USE_SERIAL.println(R"=====(       a 100prznt.de project by E. Ruemmler        )=====");
 	
 	USE_SERIAL.print(R"=====(                      v)=====");
 	USE_SERIAL.println(VERSION);
