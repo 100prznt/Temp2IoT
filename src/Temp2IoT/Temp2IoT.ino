@@ -64,8 +64,8 @@
 
 #include <ESPStringTemplate.h>		// ESPStringTemplate			https://github.com/DaleGia/ESPStringTemplate
 
-#include <DallasTemperature.h>
-#include <OneWire.h>
+#include <DallasTemperature.h>		// Maxim Temperature ICs		https://github.com/milesburton/Arduino-Temperature-Control-Library
+#include <OneWire.h>				// 1-Wire library				https://www.pjrc.com/teensy/td_libs_OneWire.html
 #include <stdio.h>
 
 #include <cppQueue.h>				// Queue handling library		https://github.com/SMFSW/Queue
