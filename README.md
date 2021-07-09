@@ -77,12 +77,12 @@ If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropr
 
 ```
 {
-  "systemname": "Temp2IoT",
+  "systemname": "My Temp2IoT instance",
   "secure_counter": 50,
   "firmware": "2.2.04-b",
   "sensors": [
     {
-      "name": "Wasser",
+      "name": "water",
       "value": 23.625,
       "mean-1": {
         "count": 5,
@@ -98,7 +98,7 @@ If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropr
       "time": "Fri Jul  9 13:12:36 2021"
     },
     {
-      "name": "Luft",
+      "name": "ambient",
       "value": 23.9375,
       "unit": "Celsius",
       "time": "Fri Jul  9 13:12:37 2021"
