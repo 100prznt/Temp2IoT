@@ -5,9 +5,9 @@ Very basic IoT thermometer with REST API and Web-UI. Implemented according to th
 
 ## Features
 * Temperature measurement at one or two measuring points using DS18B20 sensors
-* Shows the measured values on integrated Web UI
+* Shows the measured values on integrated web UI
 * REST API for integration with master systems (e.g. ioBroker)
-* Configuration also via a Web UI
+* Configuration also via a web UI
 
 
 ## Hardware
@@ -78,20 +78,30 @@ If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropr
 ```
 {
   "systemname": "Temp2IoT",
-  "secure_counter": 999,
-  "firmware": "2.0a",
+  "secure_counter": 50,
+  "firmware": "2.2.04-b",
   "sensors": [
     {
-      "name": "name of sensor 1",
-      "value": "25.44",
+      "name": "Wasser",
+      "value": 23.625,
+      "mean-1": {
+        "count": 5,
+        "value": 23.6,
+        "period": 3600
+      },
+      "mean-24": {
+        "count": 5,
+        "value": 23.6,
+        "period": 86400
+      },
       "unit": "Celsius",
-      "time": "Thu Jun 24 20:15:00 2021"
+      "time": "Fri Jul  9 13:12:36 2021"
     },
     {
-      "name": "name of sensor 2",
-      "value": "25.25",
+      "name": "Luft",
+      "value": 23.9375,
       "unit": "Celsius",
-      "time": "Thu Jun 24 20:15:05 2021"
+      "time": "Fri Jul  9 13:12:37 2021"
     }
   ]
 }
