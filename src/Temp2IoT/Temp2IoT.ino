@@ -82,7 +82,7 @@
 #define ONE_WIRE_BUS D3
 
 
-unsigned long previousMillis = millis() - 2980 * 1000;
+//unsigned long previousMillis = millis() - 2980 * 1000;
 
 WiFiClientSecure client;
 ESP8266WebServer server(80);
@@ -176,24 +176,17 @@ void handleRoot()
 	webpage.add_P(_PAGE_WEBUI_CARDHEAD, pair_SystemName, 1);
 	
 	if (sensorCnt == 2)
-	{
 		webpage.add_P(_PAGE_WEBUI_CARDBODY, pair_Data, 4);
-	}
 	else
-	{
 		webpage.add_P(_PAGE_WEBUI_CARDBODYSINGLE, pair_Data, 2);
-	}
 
 	webpage.add_P(_PAGE_WEBUI_CARDFOOTER, pair_SecureCounter, 1);
 	
 	if (sensorCnt == 2)
-	{
 		webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT2);
-	}
 	else
-	{
-		//webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT1);
-	}	
+		webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT1);
+
 	server.send(200, "text/html", htmlBuffer);
 }
 
@@ -212,11 +205,9 @@ void handleApi()
 	doc["firmware"] = VERSION;
 	doc["sensors"][0] = getData(1);
 	if (sensorCnt == 2)
-	{
 		doc["sensors"][1] = getData(2);
-	}
 
-	serializeJson(doc, JSONmessageBuffer);
+	serializeJsonPretty(doc, JSONmessageBuffer);
 
 	server.send(200, "application/json", JSONmessageBuffer);
 }
@@ -282,7 +273,6 @@ DynamicJsonDocument getData_MeanValue(int period)
 		if (inTimeRange || cRec.timestamp > startTime)
 		{
 			inTimeRange = true;
-		
 			cnt_MeasValues_InUse++;
 			sum = sum + cRec.measvalue;
 		}
@@ -292,13 +282,9 @@ DynamicJsonDocument getData_MeanValue(int period)
 
 	doc["count"] = cnt_MeasValues_InUse;
 	doc["value"] = sum / cnt_MeasValues_InUse;
-
 	doc["period"] = periodSec;
 
-
-
 	return doc;
-
 }
 
 void handleConfig()
@@ -340,14 +326,9 @@ void handleConfig()
 	}
 
 	if (toggleSensors)
-	{
 		webpage.add_P(_PAGE_CONFIG_SENSORTOOGLETRUE);
-	}
 	else
-	{
-		webpage.add_P(_PAGE_CONFIG_SENSORTOOGLEFALSE);		
-	}
-
+		webpage.add_P(_PAGE_CONFIG_SENSORTOOGLEFALSE);
 
 	switch (colorScheme)
 	{
@@ -397,9 +378,7 @@ void getConfig()
 	String toggleSensorsString = server.arg("toggleSensors");
 	bool buffer = false;
 	if (toggleSensorsString == "on")
-	{
 		buffer = true;
-	}
 
 	if (buffer != toggleSensors)
 	{
@@ -408,12 +387,12 @@ void getConfig()
 	}
 
 
-  	// sensorCnt
+  	//sensorCnt
 	String sensorCntString = server.arg("sensorCnt");
 	sensorCnt = sensorCntString.toInt();
 
 
-	 // colorScheme
+	//colorScheme
 	String colorSchemeString = server.arg("colorScheme");
 	colorScheme = colorSchemeString.toInt();
 
@@ -443,7 +422,6 @@ void getConfig()
   	ntpServerString.toCharArray(ntpServer,20);
 
 	saveConfig();
-
 	redirectBack();
 }
 
@@ -466,20 +444,20 @@ void getFormat()
 }
 
 void readTemperature() {
-	//USE_SERIAL.println("Start new reading on 1-Wire bus...");
+	USE_SERIAL.print("Start new reading on 1-Wire bus, SC = ");
+	USE_SERIAL.println(SecureCounter);
+
     digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
-    //float temp1;
-    //float temp2;
 
     time_t now = time(nullptr);
 	String time = String(ctime(&now));
     time.toCharArray(measTime, 25);
 
-
-
     int cnt = 3; //retry counter
-    do {
-    	if (cnt <= 0) {
+    do
+    {
+    	if (cnt <= 0)
+    	{
     		String nanStr = "NaN";
     		nanStr.toCharArray(Temperature1Str, 6);
     		nanStr.toCharArray(Temperature2Str, 6);
@@ -492,9 +470,7 @@ void readTemperature() {
     	{
     		MeasValue2 = DS18B20.getTempCByIndex(1);
     		if (MeasValue2 != 127.94)
-    		{
     			dtostrf(MeasValue2, 2, 2, Temperature2Str);
-    		}
     	}
 
     	delay(100);
@@ -504,12 +480,10 @@ void readTemperature() {
 	cnt_Readings++;
     if (cnt_Readings >= 12)
     {
-    	USE_SERIAL.println("store measvalue in trend queue");
+    	USE_SERIAL.println("   Store received measvalue in trend queue");
 	    strRec rec = { now, MeasValue1 };
 	    if (toggleSensors)
-	    {
 	    	rec = {now, MeasValue2 };
-	    }
 	    queue_MeasValues.push(&rec);
 	    cnt_Readings = 0;
 	
@@ -523,7 +497,7 @@ void readTemperature() {
 			sum = sum + cRec.measvalue;
 		}
 		MeasValueMean = sum / cnt_MeasValues;
-}
+	}
 
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
@@ -535,18 +509,19 @@ void setup()
 	USE_SERIAL.begin(115200);
 	delay(500);
 
-	USE_SERIAL.println("");
+	USE_SERIAL.println();
 	USE_SERIAL.println(R"=====(       _____               ___ ___    _____       )=====");
 	USE_SERIAL.println(R"=====(      |_   _|__ _ __  _ __|_  )_ _|__|_   _|      )=====");
 	USE_SERIAL.println(R"=====(        | |/ -_) '  \| '_ \/ / | |/ _ \| |        )=====");
 	USE_SERIAL.println(R"=====(        |_|\___|_|_|_| .__/___|___\___/|_|        )=====");
 	USE_SERIAL.println(R"=====(                     |_|                          )=====");
-	USE_SERIAL.println("");
+	USE_SERIAL.println();
 	USE_SERIAL.println(R"=====(**************************************************)=====");
 	USE_SERIAL.println(R"=====(       a 100prznt.de project by E. Ruemmler       )=====");
+	
 	USE_SERIAL.print(R"=====(                      v)=====");
 	USE_SERIAL.println(VERSION);
-	USE_SERIAL.println("");
+	USE_SERIAL.println();
 	
 	USE_SERIAL.println("Setting up...");
 
@@ -577,90 +552,60 @@ void setup()
 
     			JsonVariant jsonSystemName = json["systemName"];
     			if (!jsonSystemName.isNull())
-    			{
     				strcpy(systemName, json["systemName"]);
-    			}
 
     			JsonVariant jsonTemp1Name = json["temp1Name"];
     			if (!jsonTemp1Name.isNull())
-    			{
     				strcpy(temp1Name, json["temp1Name"]);
-    			} 
+
     			JsonVariant jsonTemp2Name = json["temp2Name"];
     			if (!jsonTemp2Name.isNull())
-    			{
     				strcpy(temp2Name, json["temp2Name"]);
-    			} 
 
     			JsonVariant jsonSensorCnt = json["sensorCnt"];
     			if (!jsonSensorCnt.isNull())
-    			{ 
     				sensorCnt = jsonSensorCnt.as<int>();
-    			}
 
     			JsonVariant jsonToggleTemps = json["toggleSensors"];
     			if (!jsonToggleTemps.isNull())
-    			{ 
     				toggleSensors = jsonToggleTemps.as<bool>();
-    			}
 
     			JsonVariant jsonPrimaryColor = json["primaryColor"];
     			if (!jsonPrimaryColor.isNull())
-    			{
     				strcpy(primaryColor, json["primaryColor"]);
-    			} 
+
     			JsonVariant jsonNtpServer = json["ntpServer"];
     			if (!jsonNtpServer.isNull())
-    			{
     				strcpy(ntpServer, json["ntpServer"]);
-    			} 
 
 				USE_SERIAL.println();
     			USE_SERIAL.print("primaryColor: ");
     			USE_SERIAL.println(primaryColor);
 
     			if (strcmp(primaryColor, "#1e87f0") == 0)
-    			{
     				colorScheme = 2;
-    			}
     			else if (strcmp(primaryColor, "#30a4a1") == 0)
-    			{
     				colorScheme = 3;
-    			}
     			else if (strcmp(primaryColor, "#325c84") == 0)
-    			{
     				colorScheme = 4;
-    			}
     			else if (strcmp(primaryColor, "#f08a00") == 0)
-    			{
     				colorScheme = 5;
-    			}
     			else if (strcmp(primaryColor, "#060d2a") == 0)
-    			{
     				colorScheme = 6;
-    			}
     			else
-				{
     				colorScheme = 1;
-    			}
 
     			USE_SERIAL.print("colorScheme: ");
     			USE_SERIAL.println(colorScheme);
     		}
     		else
-			{
 				USE_SERIAL.println("failed to open /config.json");
-			}
     	}
     	else
-    	{
     		USE_SERIAL.println("/config.json not found");
-    	}
     }
     else
-    {
-    	Serial.println("failed to mount FS");
-    }
+    	USE_SERIAL.println("failed to mount FS");
   	//end read
 
     WiFiManager wifiManager;
@@ -675,13 +620,9 @@ void setup()
 
     char char_toggleSensors[6];
     if (toggleSensors)
-    {
     	strncpy(char_toggleSensors, "true", 6);
-    }
     else
-    {
     	strncpy(char_toggleSensors, "false", 6);
-    }
 
 	//Define
     WiFiManagerParameter custom_systemName("systemName", "Systemname", systemName, 20);
@@ -719,36 +660,27 @@ void setup()
 
   	server.begin();
 
-  	Serial.print("IP address: ");
-  	Serial.println(WiFi.localIP());
+  	//USE_SERIAL.print("IP address: ");
+  	//USE_SERIAL.println(WiFi.localIP());
 
 	//read updated parameters
   	strcpy(systemName, custom_systemName.getValue());
   	strcpy(temp1Name, custom_temp1Name.getValue());
   	strcpy(temp2Name, custom_temp2Name.getValue());
 
-	/* sensorCnt = String(custom_sensorCnt.getValue()).toInt();
-	if (String(custom_toggleSensors.getValue()) == String("true") || String(custom_toggleSensors.getValue()) == String("TRUE"))
-	{
-		toggleSensors = true;
-	}
-	else
-	{
-		toggleSensors = false;
-	} */
-
 	//save the custom parameters to FS
   	if (shouldSaveConfig)
-  	{
   		saveConfig();
-  	}
-
 
   	DS18B20.begin();
   	SecureCounter = 0;
 
-  	Serial.println("HTTP Temp2IoT server started");
-    digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
+	USE_SERIAL.println();
+  	USE_SERIAL.println("HTTP Temp2IoT server started, you can reach the web UI on:");
+  	USE_SERIAL.print("http://");
+  	USE_SERIAL.print(WiFi.localIP());
+  	USE_SERIAL.println("/");
+    digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
 }
 
 void saveConfig()
@@ -766,9 +698,7 @@ void saveConfig()
 	File configFile = SPIFFS.open("/config.json", "w");
 
 	if (!configFile)
-	{
-		Serial.println("failed to open config file for writing");
-	}
+		USE_SERIAL.println("failed to open config file for writing");
 
 	serializeJson(json, Serial);
 	serializeJson(json, configFile);
@@ -776,7 +706,7 @@ void saveConfig()
 
 void infoReset()
 {
-	Serial.println("Format System");
+	USE_SERIAL.println("Format System");
 
     // Reset Wifi-Setting
 	WiFiManager wifiManager;
@@ -836,7 +766,8 @@ void updateFirmware()
 	t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://pool.100prznt.de/temp2iot/bin/release/latest/Temp2IoT.ino.d1_mini.bin");
 
 
-	switch (ret) {
+	switch (ret)
+	{
 		case HTTP_UPDATE_FAILED:
 		USE_SERIAL.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
 		break;
@@ -857,7 +788,7 @@ void loop()
 
 	unsigned long currentMillis = millis();
 
-	if (currentMillis % 5000 == 0 )
+	if (currentMillis % 5000 == 0 ) //each 5 seconds
 	{ 
 		readTemperature();
 
@@ -888,22 +819,5 @@ void loop()
 
 		USE_SERIAL.print("Meanvalue: ");
 		USE_SERIAL.println(meanValue);*/
-
-
-
 	}
 }
-
-void getTime()
-{
-	time_t now = time(nullptr);
-	String time = String(ctime(&now));
-	time.trim();
-	time.substring(11,16).toCharArray(time_value, 10); 
-
-	char timeStr[20];
-	time.toCharArray(timeStr, 16);
-
-	//printString(6,8, time_value,2);
-}
-
