@@ -76,13 +76,11 @@
 #include "favicon.h"
 
 
-#define VERSION "2.2.04-b"
+#define VERSION "2.2.05-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
 
-
-//unsigned long previousMillis = millis() - 2980 * 1000;
 
 WiFiClientSecure client;
 ESP8266WebServer server(80);
@@ -112,7 +110,6 @@ char ntpServer[20] = "time.nist.gov";
 char measTime[26] = "Thu Jan  1 00:00:00 1970";
 char primaryColor[8] = "#ff2e64"; //"#1e87f0"
 char htmlBuffer[8000];
-
 
 
 //data storage for tend analysis
@@ -505,7 +502,7 @@ void readTemperature() {
 
 void setup()
 {
-  	// Serial debugging
+  	//Serial debugging
 	USE_SERIAL.begin(115200);
 	delay(500);
 
@@ -525,10 +522,9 @@ void setup()
 	
 	USE_SERIAL.println("Setting up...");
 
-	pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
-    digitalWrite(LED_BUILTIN, LOW);   // Turn the LED on
+	pinMode(LED_BUILTIN, OUTPUT);     //initialize the LED_BUILTIN pin as an output
+    digitalWrite(LED_BUILTIN, LOW);   //turn the LED on
 
-  	// Required for instagram api
 	client.setInsecure();
 
     if (SPIFFS.begin())
@@ -542,7 +538,7 @@ void setup()
     		{
     			USE_SERIAL.println("opened config file");
     			size_t size = configFile.size();
-        		// Allocate a buffer to store contents of the file.
+        		//allocate a buffer to store contents of the file.
     			std::unique_ptr<char[]> buf(new char[size]);
 
     			configFile.readBytes(buf.get(), size);
@@ -613,8 +609,8 @@ void setup()
 
     WiFiManagerParameter custom_header("<h3>Temp2IoT Settings</h3>");
 
-  	//Definitins of custom parameters
-	//Prepare
+  	//definitins of custom parameters
+	//prepare
     char char_sensorCnt[2];
     itoa(sensorCnt, char_sensorCnt, 10);
 
@@ -624,12 +620,12 @@ void setup()
     else
     	strncpy(char_toggleSensors, "false", 6);
 
-	//Define
+	//define
     WiFiManagerParameter custom_systemName("systemName", "Systemname", systemName, 20);
     WiFiManagerParameter custom_temp1Name("temp1Name", "Bezeichnung Sensor 1", temp1Name, 20);
     WiFiManagerParameter custom_temp2Name("temp2Name", "Bezeichnung Sensor 2", temp2Name, 20);
 
-  	//Add parameters to wifiManager
+  	//add parameters to wifiManager
     wifiManager.addParameter(&custom_header);
     wifiManager.addParameter(&custom_systemName);
     wifiManager.addParameter(&custom_temp1Name);
@@ -644,7 +640,6 @@ void setup()
 
 	//set config save notify callback
   	wifiManager.setSaveConfigCallback(saveConfigCallback);
-
 
   	wifiManager.autoConnect("Temp2IoT");
 
@@ -708,14 +703,14 @@ void infoReset()
 {
 	USE_SERIAL.println("Format System");
 
-    // Reset Wifi-Setting
+    //reset Wifi-Setting
 	WiFiManager wifiManager;
 	wifiManager.resetSettings();
 
-    // Format Flash
+    //format Flash
 	SPIFFS.format();
 
-    // Restart
+    //restart
 	ESP.reset();
 }
 
