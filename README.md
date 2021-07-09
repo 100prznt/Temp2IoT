@@ -174,8 +174,8 @@ This app is made possible by contributions from:
 
 ### Open Source Project Credits
 
-* [Follower Counter](https://github.com/jegade/followercounter) - The arc of this project based on a awesome code from [@jegade](https://github.com/jegade)
-* Used Arduino libraries are described in the code
+* [Follower Counter](https://github.com/jegade/followercounter) - The architeture of Temp2IoT based on a awesome code from [@jegade](https://github.com/jegade) used for his followercounter project.
+* Used Arduino libraries are described in the code.
 
 ## License
 The Temp2IoT project is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php "Read more about the MIT license form"). Refer to [LICENSE.txt](https://github.com/100prznt/Temp2IoT/blob/master/LICENSE.txt) for more information.
