@@ -163,3 +163,22 @@ In the folder [hardware/enclosure](hardware/enclosure) you will find 2 STL files
   <br>
 ![3d-printed enclousure open](hardware/temp2iot_logo_case_open.jpg)
 Blackened inside so that the LED produces a focused light spot
+
+## Community
+Found this project on the german [Poolpowershop-Forum](https://www.poolpowershop-forum.de/).
+* [WiFi Thermometer für 10 Euro selbst gebaut (Web UI, REST API)](https://www.poolpowershop-forum.de/forum/thread/1103493-wifi-thermometer-f%C3%BCr-10-euro-selbst-gebaut-web-ui-rest-api/)
+
+## Credits
+This app is made possible by contributions from:
+* [Elias Rümmler](http://www.100prznt.de) ([@rmmlr](https://github.com/rmmlr)) - core contributor
+
+### Open Source Project Credits
+
+* [Follower Counter](https://github.com/jegade/followercounter) - The architeture of Temp2IoT based on a awesome code from [@jegade](https://github.com/jegade) used for his followercounter project.
+* Used Arduino libraries are described in the code.
+
+## License
+The Temp2IoT project is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php "Read more about the MIT license form"). Refer to [LICENSE.txt](https://github.com/100prznt/Temp2IoT/blob/master/LICENSE.txt) for more information.
+
+## Contributions
+Contributions are welcome. Fork this repository and send a pull request if you have something useful to add.
