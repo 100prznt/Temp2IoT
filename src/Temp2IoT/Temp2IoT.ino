@@ -45,7 +45,7 @@
 
 #include "Arduino.h"
 #include <ESP8266WiFi.h>
-#include "JsonStreamingParser.h"	// Json Streaming Parser 		https://github.com/squix78/json-streaming-parser
+//#include "JsonStreamingParser.h"	// Json Streaming Parser 		https://github.com/squix78/json-streaming-parser
 
 #include <ESP8266HTTPClient.h>		// Web Download
 #include <ESP8266httpUpdate.h>		// Web Updater
@@ -251,7 +251,6 @@ DynamicJsonDocument getData_MeanValue(int period)
 {
 	int periodSec = period * 3600; //to [sec]
 	
-
 	//Generate period start time
 	time_t now = time(nullptr);
 	unsigned long startTime = now - periodSec;
@@ -310,16 +309,14 @@ void handleConfig()
 	switch (sensorCnt)
 	{
 		case 1:
-		webpage.add_P(_PAGE_CONFIG_SENSORCNT1);
-		break;
-
+			webpage.add_P(_PAGE_CONFIG_SENSORCNT1);
+			break;
 		case 2:
-		webpage.add_P(_PAGE_CONFIG_SENSORCNT2);
-		break;
-
+			webpage.add_P(_PAGE_CONFIG_SENSORCNT2);
+			break;
 		default:
-		webpage.add_P(_PAGE_CONFIG_SENSORCNT1);
-		break;
+			webpage.add_P(_PAGE_CONFIG_SENSORCNT1);
+			break;
 	}
 
 	if (toggleSensors)
@@ -331,22 +328,22 @@ void handleConfig()
 	{
 		case (2):
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_2);	
-		break;
+			break;
 		case (3):
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_3);	
-		break;
+			break;
 		case (4):
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_4);	
-		break;
+			break;
 		case (5):
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_5);	
-		break;
+			break;
 		case (6):
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_6);	
-		break;
+			break;
 		default: //1 -> 100prznt
 			webpage.add_P(_PAGE_CONFIG_COLORSCHEME_1);	
-		break;
+			break;
 	}
 
 	webpage.add_P(_PAGE_CONFIG_NTP, pair, 5);
@@ -397,22 +394,22 @@ void getConfig()
 	{
 		case 2: //Classic
 			String("#1e87f0").toCharArray(primaryColor, 8);		
-		break;
+			break;
 		case 3: //Total
 			String("#30a4a1").toCharArray(primaryColor, 8);		
-		break;
+			break;
 		case 4: //Power
 			String("#325c84").toCharArray(primaryColor, 8);	
-		break;
+			break;
 		case 5: //Sun
 			String("#f08a00").toCharArray(primaryColor, 8);	
-		break;
+			break;
 		case 6: //100prznt secondary
 			String("#060d2a").toCharArray(primaryColor, 8);	
-		break;
+			break;
 		default: //1 -> 100prznt
 			String("#ff2e64").toCharArray(primaryColor, 8);	
-		break;
+			break;
 	}
 
   	String ntpServerString = server.arg("ntpServer");
@@ -482,6 +479,7 @@ void readTemperature() {
 	    strRec rec = { now, MeasValue1 };
 	    if (toggleSensors)
 	    	rec = {now, MeasValue2 };
+
 	    queue_MeasValues.push(&rec);
 	    cnt_Readings = 0;
 	
@@ -507,6 +505,7 @@ void setup()
 	USE_SERIAL.begin(115200);
 	delay(500);
 
+	//print out some crazy startup logo ;)
 	USE_SERIAL.println();
 	USE_SERIAL.println(R"=====(       _____               ___ ___    _____        )=====");
 	USE_SERIAL.println(R"=====(      |_   _|__ _ __  _ __|_  )_ _|__|_   _|       )=====");
@@ -673,9 +672,7 @@ void setup()
 
 	USE_SERIAL.println();
   	USE_SERIAL.println("HTTP Temp2IoT server started, you can reach the web UI on:");
-  	USE_SERIAL.print("http://");
-  	USE_SERIAL.print(WiFi.localIP());
-  	USE_SERIAL.println("/");
+  	USE_SERIAL.printf("http://%s/\n", WiFi.localIP());
     digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
 }
 
@@ -765,16 +762,14 @@ void updateFirmware()
 	switch (ret)
 	{
 		case HTTP_UPDATE_FAILED:
-		USE_SERIAL.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-		break;
-
+			USE_SERIAL.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+			break;
 		case HTTP_UPDATE_NO_UPDATES:
-		USE_SERIAL.println("HTTP_UPDATE_NO_UPDATES");
-		break;
-
+			USE_SERIAL.println("HTTP_UPDATE_NO_UPDATES");
+			break;
 		case HTTP_UPDATE_OK:
-		USE_SERIAL.println("HTTP_UPDATE_OK");
-		break;
+			USE_SERIAL.println("HTTP_UPDATE_OK");
+			break;
 	}
 }
  
