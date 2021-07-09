@@ -3,6 +3,9 @@
  * Very basic IoT thermometer with REST API and web UI,
  * based on ESP8266 hardware (WeMos D1 mini) 
  *
+ * a 100prznt.de project by E. Ruemmler
+ *
+ *
  * C++11
  *
  * Copyright (C) 2021  Elias Ruemmler

@@ -1,5 +1,43 @@
-//PROGMEM <- ablage im Flash
-//R <- RawString
+/**
+ * Temp2IoT
+ * Very basic IoT thermometer with REST API and web UI,
+ * based on ESP8266 hardware (WeMos D1 mini) 
+ *
+ * a 100prznt.de project by E. Ruemmler
+ *
+ *
+ * C++11
+ *
+ * Copyright (C) 2021  Elias Ruemmler
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * @package    Temp2IoT
+ * @author     Elias Ruemmler <e.ruemmler@rc-art.de>
+ * @copyright  2021 RC-Art Solutions
+ * @version    2.2
+ * @link       https://github.com/100prznt/Temp2IoT
+ * @since      2020-06-17
+ */
+
+//PROGMEM            <- Ablage im Flash
+//R"=====(  )====="  <- Deklaration rawstring, auch Steuerzeichen zulässig
 
 const char _FAVICON_SVG_WHITE[] PROGMEM = R"=====(<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: 100prznt.de  -->
