@@ -1,7 +1,21 @@
 {
   "lateststable": "",
-  "latest": "2.1.09",
+  "latest": "2.2.03",
   "releases": [
+    {
+      "version": "2.2.04",
+      "state": "beta",
+      "date": "Thu Jul  8 21:09:27 2021",
+      "path": "/bin/release/2.2.03-beta/Temp2IoT.ino.d1_mini.bin",
+      "changes": [
+        "Add config for NTP server",
+        "Add 1 and 24h measvalue queue",
+        "Add mean values for api call",
+        "Add hiden link to setup page",
+        "Bugfix scheme no storage",
+        "Debug output current version"
+      ]
+    },
     {
       "version": "2.1.10",
       "state": "beta",

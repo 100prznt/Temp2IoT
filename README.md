@@ -4,9 +4,10 @@
 Very basic IoT thermometer with REST API and Web-UI. Implemented according to the "KISS" approach - **K**eep **I**t **S**imple and **S**tupid
 
 ## Features
-* Temperature measurement at one measuring points using a DS18B20 sensors
+* Temperature measurement at one or two measuring points using DS18B20 sensors
 * Shows the measured values on integrated Web UI
 * REST API for integration with master systems (e.g. ioBroker)
+* Configuration also via a Web UI
 
 
 ## Hardware
@@ -130,6 +131,26 @@ Setup page on a smartphone browser
 | 4 | Power    | `#325c84`     | ![#325c84](https://img.shields.io/badge/-325c84-325c84) |
 | 5 | Sun      | `#f08a00`     | ![#f08a00](https://img.shields.io/badge/-f08a00-f08a00) |
 | 6 | Dark     | `#060d2a`     | ![#060d2a](https://img.shields.io/badge/-060d2a-060d2a) |
+
+
+
+## Debug Output
+
+Feel free to take a look at the serial monitor (115200 baud).
+
+```
+21:54:57.656 ->
+21:54:57.656 ->        _____               ___ ___    _____       
+21:54:57.656 ->       |_   _|__ _ __  _ __|_  )_ _|__|_   _|      
+21:54:57.702 ->         | |/ -_) '  \| '_ \/ / | |/ _ \| |        
+21:54:57.702 ->         |_|\___|_|_|_| .__/___|___\___/|_|        
+21:54:57.702 ->                      |_|                          
+21:54:57.702 -> 
+21:54:57.702 -> **************************************************
+21:54:57.702 ->        a 100prznt.de project by E. Ruemmler       
+21:54:57.702 ->                       v2.2.04-b
+21:54:57.702 -> 
+```
 
 ## Enclosure
 In the folder [hardware/enclosure](hardware/enclosure) you will find 2 STL files of a suitable enclosure. If the cover is printed upside-down, you can print the first two layers in a different color to make the Temp2IoT icon stand out better.

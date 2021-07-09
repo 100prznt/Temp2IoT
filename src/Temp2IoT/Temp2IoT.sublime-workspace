@@ -4,34 +4,6 @@
 		"selected_items":
 		[
 			[
-				"Meas",
-				"MeasValue1"
-			],
-			[
-				"mean",
-				"meanTemperature"
-			],
-			[
-				"qu",
-				"queue_MeasValue"
-			],
-			[
-				"times",
-				"timestamp"
-			],
-			[
-				"Pr",
-				"println"
-			],
-			[
-				"prin",
-				"println"
-			],
-			[
-				"USE",
-				"USE_SERIAL"
-			],
-			[
 				"color",
 				"colorScheme"
 			],
@@ -80,10 +52,10 @@
 	"buffers":
 	[
 		{
-			"file": "README.md",
+			"file": "/D/Projects/GitHub/Temp2IoT/README.md",
 			"settings":
 			{
-				"buffer_size": 566,
+				"buffer_size": 5671,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -92,16 +64,16 @@
 			"file": "Temp2IoT.ino",
 			"settings":
 			{
-				"buffer_size": 19426,
+				"buffer_size": 21800,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "favicon.h",
+			"file": "README.md",
 			"settings":
 			{
-				"buffer_size": 1727,
+				"buffer_size": 1315,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -110,7 +82,7 @@
 			"file": "index.h",
 			"settings":
 			{
-				"buffer_size": 7761,
+				"buffer_size": 7960,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -119,7 +91,16 @@
 			"file": "config.h",
 			"settings":
 			{
-				"buffer_size": 5709,
+				"buffer_size": 6114,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/D/Projects/GitHub/Temp2IoT/src/ci/releases.json",
+			"settings":
+			{
+				"buffer_size": 956,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -157,24 +138,13 @@
 	},
 	"expanded_folders":
 	[
-		"/C/dev/Projekte_Git/Temp2IoT/src/Temp2IoT"
+		"/D/Projects/GitHub/Temp2IoT/src/Temp2IoT"
 	],
 	"file_history":
 	[
-		"/C/work/20210702_MWKM_UnitTests/TrimmingRegulation_MPS1_D_0_10bar_OutPin2_0261P000DF_V02_KnieTest.xml",
-		"/C/dev/Projekte_Git/Temp2IoT/src/Temp2IoT/Temp2IoT.ino",
-		"/C/work/20210702_MWKM_UnitTests/TrimmingRegulationAppendix_MPS1_MVCP_CMP49XM_10bar_0261P000JU_V01.xml",
-		"/C/work/20210702_MWKM_UnitTests/TrimmingRegulation_MPS3evo_D_0_10bar_Rel_4T5P_0261P03970_V03.xml",
-		"/C/work/20210702_MWKM_UnitTests/d 926_Asic0_MPS3-D_0_10bar.csv",
-		"/C/work/20210702_MWKM_UnitTests/d 926_Asic0_MPS3-D_0_10bar_2T2P.csv",
-		"/C/work/20180808_MWKM_Analog/MwkmParameters_MPS3evo_0261P04726_V00.xml",
-		"/C/work/20180927_MWKM_Sent_UnitTest/MwkmParameters_MPS3evo_0261P04726_V00.xml",
-		"/C/work/20190628_MPS3_mwkm_ANALOG/TrimmingRegulation_MPS3evo_MWKP_CMP49XN_22bar_0261P04726_V00.xml",
-		"/C/work/20190628_MPS3_mwkm_ANALOG/Prüfvorschrift_0261P03967_V07.xml",
-		"/C/work/20210315_MWKM_Analog_Abgl_Daten/MwkmParameters_MPS3evo_0261P04726_V00.xml",
-		"/C/Users/rue3eh/AppData/Local/Temp/7zO49809A5E/MwkmParameters_MPS3evo_0261P04726_V00.xml",
+		"/C/Users/Elias Ruemmler/AppData/Local/Temp/fz3temp-2/index 2.html",
 		"/D/Projects/GitHub/Temp2IoT/src/ci/releases.json",
-		"/D/Projects/GitHub/Temp2IoT/README.md",
+		"/C/Users/Elias Ruemmler/AppData/Local/Temp/fz3temp-2/index.html",
 		"/D/Projects/GitHub/Temp2IoT/src/ci/index.php",
 		"/D/Projects/GitHub/Temp2IoT/src/ci/index.html",
 		"/C/Users/Elias Ruemmler/Desktop/Text_FB_Mod.md",
@@ -288,11 +258,22 @@
 		"/U/01_DATA/Dynamisches_NTC_Messen/Teile OHNE Kleber/20210201_837_1.txt",
 		"/U/01_DATA/Dynamisches_NTC_Messen/Teile OHNE Kleber/20210201_920_1.txt",
 		"/U/01_DATA/Dynamisches_NTC_Messen/Teile OHNE Kleber/20210201_837_2.txt",
-		"/U/01_DATA/Dynamisches_NTC_Messen/Teile OHNE Kleber/20210201_920_2.txt"
+		"/U/01_DATA/Dynamisches_NTC_Messen/Teile OHNE Kleber/20210201_920_2.txt",
+		"/C/dev/Projekte_CS/Bosch.DeviceLibrary/.editorconfig",
+		"/C/dev/Projekte_Git/FlowCalc/PumpDefinitions/test.xml",
+		"/C/privat/HAUS/05_KNX/Projekt/Home.knxproj/M-0083/Hardware.xml",
+		"/C/privat/HAUS/05_KNX/Projekt/Home.knxproj/M-0083/M-0083_A-0029-35-D349.xml",
+		"/C/Users/rue3eh/Desktop/Bestellung_Ali.md",
+		"/C/dev/Projekte_TfsGit/Bosch.DeviceLibrary/DeviceManagerTest/bin/x64/Debug/dummy.json",
+		"/C/privat/HAUS/05_KNX/Projekt/Home.knxproj/M-0083/Baggages.xml",
+		"/C/pmcu2005/WP2/Wp2ConfigFile.xml",
+		"/C/pmcu2005/WP2/init_with_5Vbias.scpi",
+		"/C/dev/Projekte_CS/EowCalc/EowCalc/bin/Debug/breaks.xml",
+		"/C/cert/reg_cert.sh"
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 65.0
 	},
 	"find_in_files":
 	{
@@ -306,8 +287,6 @@
 		"case_sensitive": true,
 		"find_history":
 		[
-			"0539367675781250",
-			"interval",
 			"toggleTemps",
 			"tempCnt",
 			"OutputData",
@@ -384,24 +363,88 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "README.md",
+					"file": "/D/Projects/GitHub/Temp2IoT/README.md",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 566,
+						"buffer_size": 5671,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								512,
-								524
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Markdown/Markdown.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1620.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Temp2IoT.ino",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21800,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2802,
+								2802
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 648.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "README.md",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1315,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -415,63 +458,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Temp2IoT.ino",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 19426,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3843,
-								3843
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2485.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "favicon.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1727,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1719,
-								1719
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -480,15 +467,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7761,
+						"buffer_size": 7960,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								329,
-								257
+								2929,
+								2929
 							]
 						],
 						"settings":
@@ -501,10 +488,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1352.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -513,15 +500,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5709,
+						"buffer_size": 6114,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								385,
-								385
+								1484,
+								1484
 							]
 						],
 						"settings":
@@ -537,7 +524,40 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/D/Projects/GitHub/Temp2IoT/src/ci/releases.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 956,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								401,
+								401
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -545,7 +565,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 32.0
+		"height": 65.0
 	},
 	"input":
 	{
@@ -586,7 +606,7 @@
 	"project": "Temp2IoT.sublime-project",
 	"replace":
 	{
-		"height": 60.0
+		"height": 126.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -624,7 +644,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 166.0,
+	"side_bar_width": 265.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

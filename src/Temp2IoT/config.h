@@ -6,28 +6,28 @@ const char _PAGE_HEAD[] PROGMEM = R"=====(
             <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any">
             <style>
                 html {
-                    font-size: 70%;
+                    font-size: 80%;
                     box-sizing: border-box;
                 }
                 html  {
                     padding: 1em;
                 }
                 *, *::before, *::after {
-                margin: 0;
-                padding: 0;
-                box-sizing: inherit;
-                font-family: sans-serif;
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: inherit;
+                    font-family: sans-serif;
                 }
                 label {
                     display: block;
                     font-size: 18px;
-                    border-bottom: 1px solid #eee; 
+                    border-bottom: 1px solid #ddd; 
                     padding: 5px 0;
                     margin: 10px 0 0 0; 
                 }
                 label.inline {
                     display: block;
-                    font-size: 13px;
+                    font-size: 15px;
                     border-bottom: 0 none;
                     padding: 2px 0;
                     margin: 0;
@@ -40,15 +40,11 @@ const char _PAGE_HEAD[] PROGMEM = R"=====(
                     color: #fff;
                     border: 0;
                     text-decoration: none;
-                }
-                a {
                     font-size: 110%;
+                }                
+                h1 {
+                    font-size: 24px; margin: 5px 0;
                 }
-                
-                h1 { font-size: 24px; margin: 5px 0;}
-               
-               
-            
             </style>
             <meta name = "viewport" content = "width = device-width">
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -56,7 +52,7 @@ const char _PAGE_HEAD[] PROGMEM = R"=====(
 <body>
 )=====";
 
-const char _PAGE_START[] PROGMEM  = R"=====(<h1>Temp2IoT</h1><form method="get" action="/config">)=====";
+const char _PAGE_START[] PROGMEM  = R"=====(<h1>Temp2IoT</h1><p>v%VERSION%<br>a 100prznt.de project by E. Ruemmler</p><form method="get" action="/config">)=====";
 
 const char _PAGE_ACTIONS[] PROGMEM = R"=====(
 <label>Funktionen</label>
