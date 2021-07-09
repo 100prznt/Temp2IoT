@@ -93,7 +93,7 @@ const char _PAGE_HEAD[] PROGMEM = R"=====(
 <body>
 )=====";
 
-const char _PAGE_START[] PROGMEM  = R"=====(<h1>Temp2IoT</h1><p>v%VERSION%<br>a 100prznt.de project by E. Ruemmler</p><form method="get" action="/config">)=====";
+const char _PAGE_START[] PROGMEM  = R"=====(<h1>Temp2IoT</h1><p style="margin-left: 5px;">v%VERSION%<br>a 100prznt.de project by E. Ruemmler</p><form method="get" action="/config">)=====";
 
 const char _PAGE_ACTIONS[] PROGMEM = R"=====(
 <label>Funktionen</label>
