@@ -672,7 +672,9 @@ void setup()
 
 	USE_SERIAL.println();
   	USE_SERIAL.println("HTTP Temp2IoT server started, you can reach the web UI on:");
-  	USE_SERIAL.printf("http://%s/\n", WiFi.localIP());
+  	USE_SERIAL.print("http://");
+  	USE_SERIAL.print(WiFi.localIP());
+  	USE_SERIAL.println("/");
     digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
 }
 
@@ -747,15 +749,26 @@ void update_error(int err)
 
 void updateFirmware()
 {
-
+	USE_SERIAL.println("UPDATE:  Start update process...");
 	ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
 
+	USE_SERIAL.println("UPDATE:  Stop ESP8266WebServer");
+	server.close();
+	server.stop();
+	USE_SERIAL.println("UPDATE:  ESP8266WebServer is stopped");
+
+	delay(500);
+
+
+	USE_SERIAL.println("UPDATE:  Register callback events");
     // Add optional callback notifiers
 	ESPhttpUpdate.onStart(update_started);
 	ESPhttpUpdate.onEnd(update_finished);
 	ESPhttpUpdate.onProgress(update_progress);
 	ESPhttpUpdate.onError(update_error);
 
+
+	USE_SERIAL.println("UPDATE:  Call update()");
 	t_httpUpdate_return ret = ESPhttpUpdate.update(client, "https://pool.100prznt.de/temp2iot/bin/release/latest/Temp2IoT.ino.d1_mini.bin");
 
 
