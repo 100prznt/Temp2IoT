@@ -68,7 +68,7 @@
 #include <OneWire.h>				// 1-Wire library				https://www.pjrc.com/teensy/td_libs_OneWire.html
 #include <stdio.h>
 
-#include <cppQueue.h>				// Queue handling library		https://github.com/SMFSW/Queue
+//#include <cppQueue.h>				// Queue handling library		https://github.com/SMFSW/Queue
 
 
 #include "index.h"
@@ -114,12 +114,12 @@ char htmlBuffer[8000];
 
 //data storage for tend analysis
 #define	IMPLEMENTATION FIFO
-struct strRec {
+/*struct strRec {
 	time_t	timestamp;
 	float	measvalue;
 } Rec;
 
-cppQueue queue_MeasValues(sizeof(Rec), 1440, IMPLEMENTATION, true);	//Init queue; 1440 min = 24 h
+cppQueue queue_MeasValues(sizeof(Rec), 1440, IMPLEMENTATION, true);*/	//Init queue; 1440 min = 24 h
 float MeasValueMean;
 int cnt_Readings = 12;
 
@@ -249,6 +249,8 @@ DynamicJsonDocument getData(int idx)
 
 DynamicJsonDocument getData_MeanValue(int period)
 {
+	DynamicJsonDocument doc(1024);
+	/*
 	int periodSec = period * 3600; //to [sec]
 	
 	//Generate period start time
@@ -274,11 +276,10 @@ DynamicJsonDocument getData_MeanValue(int period)
 		}
 	}
 
-	DynamicJsonDocument doc(1024);
 
 	doc["count"] = cnt_MeasValues_InUse;
 	doc["value"] = sum / cnt_MeasValues_InUse;
-	doc["period"] = periodSec;
+	doc["period"] = periodSec;*/
 
 	return doc;
 }
@@ -376,7 +377,7 @@ void getConfig()
 
 	if (buffer != toggleSensors)
 	{
-		queue_MeasValues.clean();
+		//queue_MeasValues.clean();
 		toggleSensors = buffer;
 	}
 
@@ -472,7 +473,7 @@ void readTemperature() {
     	cnt--;
     } while (MeasValue1 == 85.0 || MeasValue1 == (-127.0) || MeasValue1 == 127.94);
 
-	cnt_Readings++;
+	/*cnt_Readings++;
     if (cnt_Readings >= 12)
     {
     	USE_SERIAL.println("# Store received measvalue in trend queue");
@@ -493,7 +494,7 @@ void readTemperature() {
 			sum = sum + cRec.measvalue;
 		}
 		MeasValueMean = sum / cnt_MeasValues;
-	}
+	}*/
 
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
