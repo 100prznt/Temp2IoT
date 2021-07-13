@@ -120,6 +120,8 @@ char htmlBuffer[8000];
 } Rec;
 
 cppQueue queue_MeasValues(sizeof(Rec), 1440, IMPLEMENTATION, true);*/	//Init queue; 1440 min = 24 h
+float MeasValues[1440];
+int MeasValues_Index = 0;
 float MeasValueMean;
 int cnt_Readings = 12;
 
@@ -473,15 +475,24 @@ void readTemperature() {
     	cnt--;
     } while (MeasValue1 == 85.0 || MeasValue1 == (-127.0) || MeasValue1 == 127.94);
 
-	/*cnt_Readings++;
+	cnt_Readings++;
     if (cnt_Readings >= 12)
     {
     	USE_SERIAL.println("# Store received measvalue in trend queue");
-	    strRec rec = { now, MeasValue1 };
-	    if (toggleSensors)
-	    	rec = {now, MeasValue2 };
+	    
+    	if (MeasValues_Index => 1440)
+    	{
+    		float buf[1400];
+    		buf = MeasValues;
+    	}
 
-	    queue_MeasValues.push(&rec);
+
+	    if (!toggleSensors)
+	    	MeasValues[MeasValues_Index] = MeasValue1;
+	    else
+	    	MeasValues[MeasValues_Index] = MeasValue2;
+	    MeasValues_Index++;
+
 	    cnt_Readings = 0;
 	
 		//Meanvalue calculation
@@ -494,7 +505,7 @@ void readTemperature() {
 			sum = sum + cRec.measvalue;
 		}
 		MeasValueMean = sum / cnt_MeasValues;
-	}*/
+	}
 
     SecureCounter++;
     digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
