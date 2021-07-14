@@ -217,7 +217,10 @@ DynamicJsonDocument getData(int idx)
 		case 1:
 		{
 			doc["name"] = temp1Name;
-			doc["value"] = MeasValue1;
+			if (MeasValue1 == 999.9)
+				doc["value"] = "NaN";
+			else
+				doc["value"] = MeasValue1;
 			if (!toggleSensors)
 			{
 				doc["mean-1"] = getData_MeanValue(1);
@@ -228,7 +231,10 @@ DynamicJsonDocument getData(int idx)
 		case 2:
 		{
 			doc["name"] = temp2Name;
-			doc["value"] = MeasValue2;
+			if (MeasValue2 == 999.9)
+				doc["value"] = "NaN";
+			else
+				doc["value"] = MeasValue2;
 			if (toggleSensors)
 			{
 				doc["mean-1"] = getData_MeanValue(1);
@@ -454,6 +460,24 @@ void getFormat()
 	infoReset();
 }
 
+float checkTemperature(float value)
+{
+	//HACK: use 999.9 as indicator for NaN
+
+	if (value == -127.0)
+		return 999.9;
+	else if (value == 0.0)
+		return 999.9;
+	else if (value == 85.0)
+		return 999.9;
+	else if (value == 127.0)
+		return 999.9;
+	else if (value == 127.94)
+		return 999.9;
+	else
+		return value;
+}
+
 void readTemperature() {
 	USE_SERIAL.print("Start new reading on 1-Wire bus, SC = ");
 	USE_SERIAL.println(SecureCounter);
@@ -464,30 +488,46 @@ void readTemperature() {
 	String time = String(ctime(&now));
     time.toCharArray(measTime, 25);
 
+
+    String nanStr = "NaN";
+    bool readingError = false;
     int cnt = 3; //retry counter
+
     do
     {
-    	if (cnt <= 0)
-    	{
-    		String nanStr = "NaN";
-    		nanStr.toCharArray(Temperature1Str, 6);
-    		nanStr.toCharArray(Temperature2Str, 6);
-    		break;
-    	}
+		DS18B20.requestTemperatures(); 
+	    MeasValue1 = checkTemperature(DS18B20.getTempCByIndex(0));
+	    if (MeasValue1 == 999.9)
+	    {
+	    	readingError = true;
+	 		nanStr.toCharArray(Temperature1Str, 6);
+	    }
+	    else
+	    {
+	    	dtostrf(MeasValue1, 2, 2, Temperature1Str);
+		}
 
-    	DS18B20.requestTemperatures(); 
-    	MeasValue1 = DS18B20.getTempCByIndex(0);
-    	dtostrf(MeasValue1, 2, 2, Temperature1Str);
-    	if (sensorCnt > 1)
-    	{
-    		MeasValue2 = DS18B20.getTempCByIndex(1);
-    		if (MeasValue2 != 127.94)
-    			dtostrf(MeasValue2, 2, 2, Temperature2Str);
-    	}
+	    if (sensorCnt > 1)
+	    {
+	    	MeasValue2 = checkTemperature(DS18B20.getTempCByIndex(1));
+		    if (MeasValue2 == 999.9)
+		    {
+	    		readingError = true;
+	 			nanStr.toCharArray(Temperature2Str, 6);
+		    }
+		    else
+		    {
+		    	dtostrf(MeasValue2, 2, 2, Temperature2Str);
+			}
+	    }
 
-    	delay(100);
-    	cnt--;
-    } while (MeasValue1 == 85.0 || MeasValue1 == (-127.0) || MeasValue1 == 127.94);
+	    if (!readingError)
+	    	break;
+	    
+		cnt--;
+		delay(100);
+	} while (cnt > 0);
+
 
     //fill measvalue buffer
 	cnt_Readings++;
@@ -502,9 +542,27 @@ void readTemperature() {
     	}
 
 	    if (!toggleSensors)
-	    	MeasValues[MeasValues_Index] = MeasValue1;
+	    {
+	    	if (MeasValue1 == 999.9)
+	    	{
+	    		USE_SERIAL.println("# Invalid temperature reading, ring buffer has been reset!");
+	    		MeasValues_IsFull = false;
+				MeasValues_Index = -1;
+	    	}
+	    	else
+	    		MeasValues[MeasValues_Index] = MeasValue1;
+	    }
 	    else
-	    	MeasValues[MeasValues_Index] = MeasValue2;
+	    {
+	    	if (MeasValue2 == 999.9)
+	    	{
+	    		USE_SERIAL.println("# Invalid temperature reading, ring buffer has been reset!");
+	    		MeasValues_IsFull = false;
+				MeasValues_Index = -1;
+	    	}
+	    	else
+	    		MeasValues[MeasValues_Index] = MeasValue2;
+	    }
 
 	    MeasValues_Index++;
 	    cnt_Readings = 0;
