@@ -386,7 +386,6 @@ void getConfig()
   	String temp2NameString = server.arg("temp2Name");
   	temp2NameString.toCharArray(temp2Name,20);
 
-
 	String toggleSensorsString = server.arg("toggleSensors");
 	bool buffer = false;
 	if (toggleSensorsString == "on")
@@ -394,16 +393,15 @@ void getConfig()
 
 	if (buffer != toggleSensors)
 	{
+		USE_SERIAL.println("# Buffer.Clear");
 		MeasValues_IsFull = false;
 		MeasValues_Index = 0;
 		toggleSensors = buffer;
 	}
 
-
   	//sensorCnt
 	String sensorCntString = server.arg("sensorCnt");
 	sensorCnt = sensorCntString.toInt();
-
 
 	//colorScheme
 	String colorSchemeString = server.arg("colorScheme");
@@ -495,7 +493,7 @@ void readTemperature() {
 	cnt_Readings++;
     if (cnt_Readings >= 720 / MEMORY_VALUES_PER_HOUR)
     {
-    	USE_SERIAL.println("# Store received measvalue in trend queue");
+    	USE_SERIAL.println("# Store received measvalue in ring buffer");
 	    
     	if (MeasValues_Index >= MEMORY_DEPTH)
     	{
@@ -511,9 +509,9 @@ void readTemperature() {
 	    MeasValues_Index++;
 	    cnt_Readings = 0;
 
-	    USE_SERIAL.print("IsFull = ");
+	    USE_SERIAL.print("# Buffer.IsFull = ");
 	    USE_SERIAL.println(MeasValues_IsFull);
-	    USE_SERIAL.print("Index = ");
+	    USE_SERIAL.print("# Buffer.Index = ");
 	    USE_SERIAL.println(MeasValues_Index);
 	}
 
