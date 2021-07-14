@@ -31,7 +31,7 @@
  * @package    Temp2IoT
  * @author     Elias Ruemmler <e.ruemmler@rc-art.de>
  * @copyright  2021 RC-Art Solutions
- * @version    2.2
+ * @version    2.3
  * @link       https://github.com/100prznt/Temp2IoT
  * @since      2020-06-17
  *
