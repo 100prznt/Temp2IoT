@@ -68,15 +68,13 @@
 #include <OneWire.h>				// 1-Wire library				https://www.pjrc.com/teensy/td_libs_OneWire.html
 #include <stdio.h>
 
-#include <cppQueue.h>				// Queue handling library		https://github.com/SMFSW/Queue
-
 
 #include "index.h"
 #include "config.h"
 #include "favicon.h"
 
 
-#define VERSION "2.2.05-b"
+#define VERSION "2.3.02-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -113,17 +111,18 @@ char htmlBuffer[8000];
 
 
 //data storage for tend analysis
-#define	IMPLEMENTATION FIFO
-struct strRec {
-	time_t	timestamp;
-	float	measvalue;
-} Rec;
+#define MEMORY_DEPTH 1440 //count of measvalues which are held in the ring buffer
+#define MEMORY_VALUES_PER_HOUR 60 //value must be divisor of 720
 
-cppQueue queue_MeasValues(sizeof(Rec), 1440, IMPLEMENTATION, true);	//Init queue; 1440 min = 24 h
+float MeasValues[MEMORY_DEPTH];
+int MeasValues_Index = 0;
+bool MeasValues_IsFull = false;
+
 float MeasValueMean;
-int cnt_Readings = 12;
+int cnt_Readings = 720 / MEMORY_VALUES_PER_HOUR;
+float MeasValueInterval = 3600.0 / MEMORY_VALUES_PER_HOUR;
 
-// =======================================================================
+//=======================================================================
 
 
 //flag for saving data
@@ -249,35 +248,54 @@ DynamicJsonDocument getData(int idx)
 
 DynamicJsonDocument getData_MeanValue(int period)
 {
-	int periodSec = period * 3600; //to [sec]
-	
-	//Generate period start time
-	time_t now = time(nullptr);
-	unsigned long startTime = now - periodSec;
-
-
-	//Meanvalue calculation
-	float sum = 0;
-	bool inTimeRange = false;
+	DynamicJsonDocument doc(1024);
 	int cnt_MeasValues_InUse = 0;
-	int cnt_MeasValues = queue_MeasValues.getCount();
-	for (int i = 0; i < cnt_MeasValues; i++)
-	{
-		strRec cRec;
-		queue_MeasValues.peekIdx(&cRec, i);
+	
+	int periodSec = period * 3600; //to [sec]
+	//periodSec = 300; //5 min
+	
+	int offset = periodSec / MeasValueInterval; //round?
+	
+	USE_SERIAL.print("offset = ");
+	USE_SERIAL.println(offset);
 
-		if (inTimeRange || cRec.timestamp > startTime)
+	if (offset > MEMORY_DEPTH || (!MeasValues_IsFull && MeasValues_Index < offset))
+	{
+		doc["value"] = "NaN";
+	}
+	else
+	{
+		float sum = 0;
+
+		if (MeasValues_Index >= offset) //no overflow
 		{
-			inTimeRange = true;
-			cnt_MeasValues_InUse++;
-			sum = sum + cRec.measvalue;
+			//Meanvalue calculation
+			for (int i = MeasValues_Index - offset; i < MeasValues_Index; i++)
+			{
+				sum += MeasValues[i];
+				cnt_MeasValues_InUse++;
+			}
 		}
+		else //with overflow
+		{
+			for (int i = 0; i < MeasValues_Index; i++)
+			{
+				sum += MeasValues[i];
+				cnt_MeasValues_InUse++;
+			}
+
+			int firstIdx = MEMORY_DEPTH - (offset - MeasValues_Index);
+			for (int i = firstIdx; i < MEMORY_DEPTH; i++)
+			{
+				sum += MeasValues[i];
+				cnt_MeasValues_InUse++;
+			}
+		}
+
+		doc["value"] = sum / cnt_MeasValues_InUse;
 	}
 
-	DynamicJsonDocument doc(1024);
-
 	doc["count"] = cnt_MeasValues_InUse;
-	doc["value"] = sum / cnt_MeasValues_InUse;
 	doc["period"] = periodSec;
 
 	return doc;
@@ -368,7 +386,6 @@ void getConfig()
   	String temp2NameString = server.arg("temp2Name");
   	temp2NameString.toCharArray(temp2Name,20);
 
-
 	String toggleSensorsString = server.arg("toggleSensors");
 	bool buffer = false;
 	if (toggleSensorsString == "on")
@@ -376,15 +393,15 @@ void getConfig()
 
 	if (buffer != toggleSensors)
 	{
-		queue_MeasValues.clean();
+		USE_SERIAL.println("# Buffer.Clear");
+		MeasValues_IsFull = false;
+		MeasValues_Index = 0;
 		toggleSensors = buffer;
 	}
-
 
   	//sensorCnt
 	String sensorCntString = server.arg("sensorCnt");
 	sensorCnt = sensorCntString.toInt();
-
 
 	//colorScheme
 	String colorSchemeString = server.arg("colorScheme");
@@ -441,7 +458,7 @@ void readTemperature() {
 	USE_SERIAL.print("Start new reading on 1-Wire bus, SC = ");
 	USE_SERIAL.println(SecureCounter);
 
-    digitalWrite(LED_BUILTIN, LOW);  // Turn the LED on
+    digitalWrite(LED_BUILTIN, LOW);  //turn the LED on
 
     time_t now = time(nullptr);
 	String time = String(ctime(&now));
@@ -472,36 +489,39 @@ void readTemperature() {
     	cnt--;
     } while (MeasValue1 == 85.0 || MeasValue1 == (-127.0) || MeasValue1 == 127.94);
 
+    //fill measvalue buffer
 	cnt_Readings++;
-    if (cnt_Readings >= 12)
+    if (cnt_Readings >= 720 / MEMORY_VALUES_PER_HOUR)
     {
-    	USE_SERIAL.println("# Store received measvalue in trend queue");
-	    strRec rec = { now, MeasValue1 };
-	    if (toggleSensors)
-	    	rec = {now, MeasValue2 };
+    	USE_SERIAL.println("# Store received measvalue in ring buffer");
+	    
+    	if (MeasValues_Index >= MEMORY_DEPTH)
+    	{
+			MeasValues_IsFull = true;
+			MeasValues_Index = 0;
+    	}
 
-	    queue_MeasValues.push(&rec);
+	    if (!toggleSensors)
+	    	MeasValues[MeasValues_Index] = MeasValue1;
+	    else
+	    	MeasValues[MeasValues_Index] = MeasValue2;
+
+	    MeasValues_Index++;
 	    cnt_Readings = 0;
-	
-		//Meanvalue calculation
-		float sum = 0;
-		int cnt_MeasValues = queue_MeasValues.getCount();
-		for (int i = 0; i < cnt_MeasValues; i++)
-		{
-			strRec cRec;
-			queue_MeasValues.peekIdx(&cRec, i);
-			sum = sum + cRec.measvalue;
-		}
-		MeasValueMean = sum / cnt_MeasValues;
+
+	    USE_SERIAL.print("# Buffer.IsFull = ");
+	    USE_SERIAL.println(MeasValues_IsFull);
+	    USE_SERIAL.print("# Buffer.Index = ");
+	    USE_SERIAL.println(MeasValues_Index);
 	}
 
     SecureCounter++;
-    digitalWrite(LED_BUILTIN, HIGH);  // Turn the LED off
+    digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
 }
 
 void setup()
 {
-  	//Serial debugging
+  	//serial debugging
 	USE_SERIAL.begin(115200);
 	delay(500);
 
@@ -795,33 +815,5 @@ void loop()
 	if (currentMillis % 5000 == 0 ) //each 5 seconds
 	{ 
 		readTemperature();
-
-		/*USE_SERIAL.print("Queue count: ");
-		USE_SERIAL.println(queue_MeasValues.getCount());
-
-		strRec cRec;
-		queue_MeasValues.peekPrevious(&cRec);
-
-		USE_SERIAL.print("Last meastime: ");
-		String timeStamp = String(ctime(&cRec.timestamp));
-		timeStamp.trim();
-		USE_SERIAL.println(timeStamp);
-		USE_SERIAL.print("Last measvalue: ");
-		USE_SERIAL.println(cRec.measvalue);
-
-		//Meanvalue calculation
-		float sum = 0;
-		int cnt = queue_MeasValues.getCount();
-		for (int i = 0; i < cnt; i++)
-		{
-			strRec cRec;
-			queue_MeasValues.peekIdx(&cRec, i);
-
-			sum = sum + cRec.measvalue;
-		}
-		float meanValue = sum / cnt;
-
-		USE_SERIAL.print("Meanvalue: ");
-		USE_SERIAL.println(meanValue);*/
 	}
 }
