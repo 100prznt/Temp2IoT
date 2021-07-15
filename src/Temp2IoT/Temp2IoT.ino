@@ -74,7 +74,7 @@
 #include "favicon.h"
 
 
-#define VERSION "2.3.02-b"
+#define VERSION "2.3.03-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
