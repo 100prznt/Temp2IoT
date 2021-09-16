@@ -58,18 +58,6 @@ You can download the compiled Flasher Tool from the GitHub Repository
 4. Switch back to the operation-tab and select the right COM-port
 5. Press the Flash-Button
 
-### Arduino IDE
-
-If no WeMos D1 mini have been programmed with the Arduino IDE so far, an appropriate setup is required first.
-* [Wiki - Setup Arduino IDE for WeMos D1 mini](https://github.com/100prznt/Temp2IoT/wiki/Setup-Arduino-IDE)
-
-1. Clone or download the repository
-2. Open the `src\Temp2IoT\Temp2IoT.ino` with the Arduino IDE
-3. Compile and upload
-4. Scan for WiFi networks and try to connect the WiFi with SSID: "Temp2IoT"
-5. Select your local WiFi from the list, enter your passwort an save the configuration
-6. Open the serial monitor (in Arduino IDE) to see the WiFi status and the applied IP address
-
 
 ## REST API
 * URL: `http://<Temp2IoT IP>/api`
