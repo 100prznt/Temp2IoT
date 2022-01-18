@@ -30,7 +30,7 @@
  *
  * @package    Temp2IoT
  * @author     Elias Ruemmler <e.ruemmler@rc-art.de>
- * @copyright  2021 RC-Art Solutions
+ * @copyright  2022 RC-Art Solutions
  * @version    2.3
  * @link       https://github.com/100prznt/Temp2IoT
  * @since      2020-06-17
@@ -74,7 +74,7 @@
 #include "favicon.h"
 
 
-#define VERSION "2.3.03-b"
+#define VERSION "2.3.04-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -103,6 +103,8 @@ int colorScheme = 1;
 int sensorCnt = 2;
 bool toggleSensors;
 char ntpServer[20] = "time.nist.gov";
+float offsetValue1 = 0;
+float offsetValue2 = 0;
 
 //init up
 char measTime[26] = "Thu Jan  1 00:00:00 1970";
@@ -504,6 +506,7 @@ void readTemperature() {
 	    }
 	    else
 	    {
+		MeasValue1 = MeasValue1 + offsetValue1;
 	    	dtostrf(MeasValue1, 2, 2, Temperature1Str);
 		}
 
@@ -517,6 +520,7 @@ void readTemperature() {
 		    }
 		    else
 		    {
+			MeasValue2 = MeasValue2 + offsetValue2;
 		    	dtostrf(MeasValue2, 2, 2, Temperature2Str);
 			}
 	    }
