@@ -8,7 +8,7 @@
  *
  * C++11
  *
- * Copyright (C) 2021  Elias Ruemmler
+ * Copyright (C) 2022  Elias Ruemmler
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -228,6 +228,7 @@ DynamicJsonDocument getData(int idx)
 				doc["mean-1"] = getData_MeanValue(1);
 				doc["mean-24"] = getData_MeanValue(24);
 			}
+			doc["offset"] = offsetValue1;
 		}
 		break;
 		case 2:
@@ -242,6 +243,7 @@ DynamicJsonDocument getData(int idx)
 				doc["mean-1"] = getData_MeanValue(1);
 				doc["mean-24"] = getData_MeanValue(24);
 			}
+			doc["offset"] = offsetValue2;
 		}
 		break;
 		default:
@@ -506,7 +508,7 @@ void readTemperature() {
 	    }
 	    else
 	    {
-		MeasValue1 = MeasValue1 + offsetValue1;
+			MeasValue1 = MeasValue1 + offsetValue1;
 	    	dtostrf(MeasValue1, 2, 2, Temperature1Str);
 		}
 
@@ -520,7 +522,7 @@ void readTemperature() {
 		    }
 		    else
 		    {
-			MeasValue2 = MeasValue2 + offsetValue2;
+				MeasValue2 = MeasValue2 + offsetValue2;
 		    	dtostrf(MeasValue2, 2, 2, Temperature2Str);
 			}
 	    }
@@ -815,8 +817,8 @@ void update_finished()
 void update_progress(int cur, int total)
 {
 	char progressString[10];
-	float percent = ((float)cur   / (float)total )  * 100;
-	sprintf(progressString, " %s",  String(percent).c_str()  );
+	float percent = ((float)cur / (float)total) * 100;
+	sprintf(progressString, " %s",  String(percent).c_str());
 
 	USE_SERIAL.printf("CALLBACK:  HTTP update process at %d of %d bytes...\n", cur, total);
 }
@@ -874,7 +876,7 @@ void loop()
 
 	unsigned long currentMillis = millis();
 
-	if (currentMillis % 5000 == 0 ) //each 5 seconds
+	if (currentMillis % 5000 == 0) //each 5 seconds
 	{ 
 		readTemperature();
 	}
