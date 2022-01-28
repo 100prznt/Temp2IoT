@@ -7,6 +7,12 @@ Partner-link from amazon.de
 * [LINDY 36734 3m USB 2.0 Typ A an Micro-B Kabel](https://amzn.to/2YbEmhI)
 
 
+## STLs
+
+You can find the STL files for the case on PrusaPrinters.org
+* [WeMos D1 mini Enclosure](https://www.prusaprinters.org/de/prints/44083-wemos-d1-mini-enclosure)
+
+
 ## Assembly
 
 If the cover is printed in a bright color, it can be blackened from the inside to prevent the LED from causing unpleasant stray light.
