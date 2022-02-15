@@ -103,8 +103,14 @@ int colorScheme = 1;
 int sensorCnt = 2;
 bool toggleSensors;
 char ntpServer[20] = "time.nist.gov";
+//parameters for calibration polynom (2. order)
+//squareValue * x^2 + gainValue * x + offsetValue
 float offsetValue1 = 0;
 float offsetValue2 = 0;
+float gainValue1 = 1;
+float gainValue2 = 1;
+float squareValue1 = 0;
+float squareValue2 = 0;
 
 //init up
 char measTime[26] = "Thu Jan  1 00:00:00 1970";
@@ -228,7 +234,6 @@ DynamicJsonDocument getData(int idx)
 				doc["mean-1"] = getData_MeanValue(1);
 				doc["mean-24"] = getData_MeanValue(24);
 			}
-			doc["offset"] = offsetValue1;
 		}
 		break;
 		case 2:
@@ -243,7 +248,6 @@ DynamicJsonDocument getData(int idx)
 				doc["mean-1"] = getData_MeanValue(1);
 				doc["mean-24"] = getData_MeanValue(24);
 			}
-			doc["offset"] = offsetValue2;
 		}
 		break;
 		default:
@@ -333,6 +337,7 @@ void handleConfig()
 	webpage.add_P(_PAGE_CONFIG_SYSNAME, pair, 1);
 	webpage.add_P(_PAGE_CONFIG_SENSOR1NAME, pair, 3);
 	webpage.add_P(_PAGE_CONFIG_SENSOR2NAME, pair, 4);
+	
 
 	switch (sensorCnt)
 	{
@@ -508,7 +513,7 @@ void readTemperature() {
 	    }
 	    else
 	    {
-			MeasValue1 = MeasValue1 + offsetValue1;
+			MeasValue1 = squareValue1 * pow(MeasValue1, 2) + gainValue1 * MeasValue1 + offsetValue1;
 	    	dtostrf(MeasValue1, 2, 2, Temperature1Str);
 		}
 
@@ -522,7 +527,7 @@ void readTemperature() {
 		    }
 		    else
 		    {
-				MeasValue2 = MeasValue2 + offsetValue2;
+				MeasValue2 = squareValue2 * pow(MeasValue2, 2) + gainValue2 * MeasValue2 + offsetValue2;
 		    	dtostrf(MeasValue2, 2, 2, Temperature2Str);
 			}
 	    }
@@ -773,6 +778,13 @@ void saveConfig()
 	json["toggleSensors"] = toggleSensors;
 	json["primaryColor"] = primaryColor;
 	json["ntpServer"] = ntpServer;
+
+	json["offsetValue1"] = offsetValue1;
+	json["gainValue1"] = gainValue1;
+	json["squareValue1"] = squareValue1;
+	json["offsetValue2"] = offsetValue2;
+	json["gainValue2"] = gainValue2;
+	json["squareValue2"] = squareValue2;
 
 	File configFile = SPIFFS.open("/config.json", "w");
 
