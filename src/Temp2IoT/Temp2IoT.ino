@@ -74,7 +74,7 @@
 #include "favicon.h"
 
 
-#define VERSION "2.3.04-b"
+#define VERSION "2.3.05-b"
 #define ROTATE 90
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
@@ -187,7 +187,12 @@ void handleRoot()
 	webpage.add_P(_PAGE_WEBUI_CARDFOOTER, pair_SecureCounter, 1);
 	
 	if (sensorCnt == 2)
-		webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT2);
+	{
+		if (toggleSensors)
+			webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT2_TOGGLED);
+		else
+			webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT2);
+	}
 	else
 		webpage.add_P(_PAGE_WEBUI_FOOTER_SCRIPT1);
 
@@ -592,6 +597,7 @@ void setup()
 {
   	//serial debugging
 	USE_SERIAL.begin(115200);
+	USE_SERIAL.setDebugOutput(true);
 	delay(500);
 
 	//print out some crazy startup logo ;)
@@ -615,6 +621,11 @@ void setup()
     digitalWrite(LED_BUILTIN, LOW);   //turn the LED on
 
 	client.setInsecure();
+
+	//const uint8_t fingerprint[20] = {0x90, 0x7F, 0x62, 0x4B, 0x5B, 0x7B, 0x70, 0xF6, 0x8A, 0xCE, 0x56, 0x1B, 0xAE, 0x90, 0x0D, 0x49, 0xE4, 0xA5, 0x84, 0x99};
+	//client.setFingerprint(fingerprint);
+
+
 
     if (SPIFFS.begin())
     {
@@ -848,12 +859,12 @@ void updateFirmware()
 	USE_SERIAL.println("UPDATE:  Start update process...");
 	ESPhttpUpdate.setLedPin(LED_BUILTIN, LOW);
 
-	USE_SERIAL.println("UPDATE:  Stop ESP8266WebServer");
+	/*USE_SERIAL.println("UPDATE:  Stop ESP8266WebServer");
 	server.close();
 	server.stop();
 	USE_SERIAL.println("UPDATE:  ESP8266WebServer is stopped");
 
-	delay(500);
+	delay(500);*/
 
 
 	USE_SERIAL.println("UPDATE:  Register callback events");

@@ -237,5 +237,24 @@ const char _PAGE_WEBUI_FOOTER_SCRIPT2[] PROGMEM  = R"=====(
 </html>
 )=====";
 
+const char _PAGE_WEBUI_FOOTER_SCRIPT2_TOGGLED[] PROGMEM  = R"=====(
+</body>
+  <script>
+  setInterval(function ( ) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("temperature1").innerHTML = (JSON.parse(this.responseText).sensors[0].value).toFixed(2);
+        document.getElementById("temperature2").innerHTML = (JSON.parse(this.responseText).sensors[1].value).toFixed(2);
+        document.getElementById("secure-counter").innerHTML = JSON.parse(this.responseText).secure_counter;
+      }
+    };
+    xhttp.open("GET", "/api", true);
+    xhttp.send();
+  }, 5000 ) ;
+  </script>
+</html>
+)=====";
+
 
 const char _PAGE_WEBUI_FOOTER[] PROGMEM = "</body></html>";
