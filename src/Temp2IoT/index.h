@@ -207,7 +207,7 @@ const char _PAGE_WEBUI_FOOTER_SCRIPT1[] PROGMEM  = R"=====(
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("temperature1").innerHTML = JSON.parse(this.responseText).sensors[0].value;
+        document.getElementById("temperature1").innerHTML = (JSON.parse(this.responseText).sensors[0].value).toFixed(2);
         document.getElementById("secure-counter").innerHTML = JSON.parse(this.responseText).secure_counter;
       }
     };
