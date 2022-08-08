@@ -519,7 +519,7 @@ void readTemperature() {
 	    else
 	    {
 			MeasValue1 = squareValue1 * pow(MeasValue1, 2) + gainValue1 * MeasValue1 + offsetValue1;
-	    	dtostrf(MeasValue1, 2, 2, Temperature1Str);
+	    	dtostrf(MeasValue1, 5, 2, Temperature1Str);
 		}
 
 	    if (sensorCnt > 1)
@@ -533,7 +533,7 @@ void readTemperature() {
 		    else
 		    {
 				MeasValue2 = squareValue2 * pow(MeasValue2, 2) + gainValue2 * MeasValue2 + offsetValue2;
-		    	dtostrf(MeasValue2, 2, 2, Temperature2Str);
+		    	dtostrf(MeasValue2, 5, 2, Temperature2Str);
 			}
 	    }
 
@@ -709,7 +709,7 @@ void setup()
 
     WiFiManagerParameter custom_header("<h3>Temp2IoT Settings</h3>");
 
-  	//definitins of custom parameters
+  	//definitinos of custom parameters
 	//prepare
     char char_sensorCnt[2];
     itoa(sensorCnt, char_sensorCnt, 10);
@@ -733,12 +733,12 @@ void setup()
 
     delay(500);
 
-	//ToDo: Check cust. ntp server address
+	  //ToDo: Check cust. ntp server address
     //configTime(0, 0, "pool.ntp.org", "time.nist.gov");
     configTime(0, 0, ntpServer, "pool.ntp.org", "time.nist.gov");
   	setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 0);  // https://github.com/nayarsystems/posix_tz_db 
 
-	//set config save notify callback
+	  //set config save notify callback
   	wifiManager.setSaveConfigCallback(saveConfigCallback);
 
   	wifiManager.autoConnect("Temp2IoT");
@@ -770,7 +770,7 @@ void setup()
   	DS18B20.begin();
   	SecureCounter = 0;
 
-	USE_SERIAL.println();
+  	USE_SERIAL.println();
   	USE_SERIAL.println("HTTP Temp2IoT server started, you can reach the web UI on:");
   	USE_SERIAL.print("http://");
   	USE_SERIAL.print(WiFi.localIP());
