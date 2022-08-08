@@ -8,7 +8,7 @@
  *
  * C++11
  *
- * Copyright (C) 2021  Elias Ruemmler
+ * Copyright (C) 2022  Elias Ruemmler
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,8 @@
  *
  * @package    Temp2IoT
  * @author     Elias Ruemmler <e.ruemmler@rc-art.de>
- * @copyright  2021 RC-Art Solutions
- * @version    2.2
+ * @copyright  2022 RC-Art Solutions
+ * @version    2.3
  * @link       https://github.com/100prznt/Temp2IoT
  * @since      2020-06-17
  */

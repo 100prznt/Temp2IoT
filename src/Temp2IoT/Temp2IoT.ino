@@ -28,12 +28,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * @package    Temp2IoT
- * @author     Elias Ruemmler <e.ruemmler@rc-art.de>
- * @copyright  2022 RC-Art Solutions
- * @version    2.3
- * @link       https://github.com/100prznt/Temp2IoT
- * @since      2020-06-17
+ * @package		Temp2IoT
+ * @author		Elias Ruemmler <e.ruemmler@rc-art.de>
+ * @copyright	2022 RC-Art Solutions
+ * @version		2.3
+ * @link		https://github.com/100prznt/Temp2IoT
+ * @since		2020-06-17
  *
  *
  * The architecture of this project is based on the code of @jegade his followercounter.
@@ -52,9 +52,9 @@
 
 #include <ArduinoJson.h>			// ArduinoJson 					https://github.com/bblanchon/ArduinoJson
 
-#include <DNSServer.h>				// - Local DNS Server used for redirecting all requests to the configuration portal
-#include <ESP8266WebServer.h>		// - Local WebServer used to serve the configuration portal
-#include <WiFiManager.h>			// WifiManager   				https://github.com/tzapu/WiFiManager
+#include <DNSServer.h>				// Local DNS Server used for redirecting all requests to the configuration portal
+#include <ESP8266WebServer.h>		// Local WebServer used to serve the configuration portal
+#include <WiFiManager.h>			// WifiManager 					https://github.com/tzapu/WiFiManager
 
 
 #include <NTPClient.h>				// Connect to a NTP Server		https://github.com/arduino-libraries/NTPClient
@@ -399,12 +399,12 @@ void redirectBack()
 
 void getConfig()
 {
-  	String systemNameString = server.arg("systemName");
-  	systemNameString.toCharArray(systemName,20);
-  	String temp1NameString = server.arg("temp1Name");
-  	temp1NameString.toCharArray(temp1Name,20);
-  	String temp2NameString = server.arg("temp2Name");
-  	temp2NameString.toCharArray(temp2Name,20);
+	String systemNameString = server.arg("systemName");
+	systemNameString.toCharArray(systemName,20);
+	String temp1NameString = server.arg("temp1Name");
+	temp1NameString.toCharArray(temp1Name,20);
+	String temp2NameString = server.arg("temp2Name");
+	temp2NameString.toCharArray(temp2Name,20);
 
 	String toggleSensorsString = server.arg("toggleSensors");
 	bool buffer = false;
@@ -419,7 +419,7 @@ void getConfig()
 		toggleSensors = buffer;
 	}
 
-  	//sensorCnt
+	//sensorCnt
 	String sensorCntString = server.arg("sensorCnt");
 	sensorCnt = sensorCntString.toInt();
 
@@ -449,8 +449,8 @@ void getConfig()
 			break;
 	}
 
-  	String ntpServerString = server.arg("ntpServer");
-  	ntpServerString.toCharArray(ntpServer,20);
+	String ntpServerString = server.arg("ntpServer");
+	ntpServerString.toCharArray(ntpServer,20);
 
 	saveConfig();
 	redirectBack();
@@ -496,106 +496,106 @@ void readTemperature() {
 	USE_SERIAL.print("Start new reading on 1-Wire bus, SC = ");
 	USE_SERIAL.println(SecureCounter);
 
-    digitalWrite(LED_BUILTIN, LOW);  //turn the LED on
+	digitalWrite(LED_BUILTIN, LOW);  //turn the LED on
 
-    time_t now = time(nullptr);
+	time_t now = time(nullptr);
 	String time = String(ctime(&now));
-    time.toCharArray(measTime, 25);
+	time.toCharArray(measTime, 25);
 
 
-    String nanStr = "NaN";
-    bool readingError = false;
-    int cnt = 3; //retry counter
+	String nanStr = "NaN";
+	bool readingError = false;
+	int cnt = 3; //retry counter
 
-    do
-    {
+	do
+	{
 		DS18B20.requestTemperatures(); 
-	    MeasValue1 = checkTemperature(DS18B20.getTempCByIndex(0));
-	    if (MeasValue1 == 999.9)
-	    {
-	    	readingError = true;
-	 		nanStr.toCharArray(Temperature1Str, 6);
-	    }
-	    else
-	    {
+		MeasValue1 = checkTemperature(DS18B20.getTempCByIndex(0));
+		if (MeasValue1 == 999.9)
+		{
+			readingError = true;
+			nanStr.toCharArray(Temperature1Str, 6);
+		}
+		else
+		{
 			MeasValue1 = squareValue1 * pow(MeasValue1, 2) + gainValue1 * MeasValue1 + offsetValue1;
-	    	dtostrf(MeasValue1, 5, 2, Temperature1Str);
+			dtostrf(MeasValue1, 5, 2, Temperature1Str);
 		}
 
-	    if (sensorCnt > 1)
-	    {
-	    	MeasValue2 = checkTemperature(DS18B20.getTempCByIndex(1));
-		    if (MeasValue2 == 999.9)
-		    {
-	    		readingError = true;
-	 			nanStr.toCharArray(Temperature2Str, 6);
-		    }
-		    else
-		    {
-				MeasValue2 = squareValue2 * pow(MeasValue2, 2) + gainValue2 * MeasValue2 + offsetValue2;
-		    	dtostrf(MeasValue2, 5, 2, Temperature2Str);
+		if (sensorCnt > 1)
+		{
+			MeasValue2 = checkTemperature(DS18B20.getTempCByIndex(1));
+			if (MeasValue2 == 999.9)
+			{
+				readingError = true;
+				nanStr.toCharArray(Temperature2Str, 6);
 			}
-	    }
+			else
+			{
+				MeasValue2 = squareValue2 * pow(MeasValue2, 2) + gainValue2 * MeasValue2 + offsetValue2;
+				dtostrf(MeasValue2, 5, 2, Temperature2Str);
+			}
+		}
 
-	    if (!readingError)
-	    	break;
-	    
+		if (!readingError)
+			break;
+		
 		cnt--;
 		delay(100);
 	} while (cnt > 0);
 
 
-    //fill measvalue buffer
+	//fill measvalue buffer
 	cnt_Readings++;
-    if (cnt_Readings >= 720 / MEMORY_VALUES_PER_HOUR)
-    {
-    	USE_SERIAL.println("# Store received measvalue in ring buffer");
-	    
-    	if (MeasValues_Index >= MEMORY_DEPTH)
-    	{
+	if (cnt_Readings >= 720 / MEMORY_VALUES_PER_HOUR)
+	{
+		USE_SERIAL.println("# Store received measvalue in ring buffer");
+		
+		if (MeasValues_Index >= MEMORY_DEPTH)
+		{
 			MeasValues_IsFull = true;
 			MeasValues_Index = 0;
-    	}
+		}
 
-	    if (!toggleSensors)
-	    {
-	    	if (MeasValue1 == 999.9)
-	    	{
-	    		USE_SERIAL.println("# Invalid temperature reading, ring buffer has been reset!");
-	    		MeasValues_IsFull = false;
+		if (!toggleSensors)
+		{
+			if (MeasValue1 == 999.9)
+			{
+				USE_SERIAL.println("# Invalid temperature reading, ring buffer has been reset!");
+				MeasValues_IsFull = false;
 				MeasValues_Index = -1;
-	    	}
-	    	else
-	    		MeasValues[MeasValues_Index] = MeasValue1;
-	    }
-	    else
-	    {
-	    	if (MeasValue2 == 999.9)
-	    	{
-	    		USE_SERIAL.println("# Invalid temperature reading, ring buffer has been reset!");
-	    		MeasValues_IsFull = false;
+			}
+			else
+				MeasValues[MeasValues_Index] = MeasValue1;
+		}
+		else
+		{
+			if (MeasValue2 == 999.9)
+			{
+				USE_SERIAL.println("# Invalid temperature reading, ring buffer has been reset!");
+				MeasValues_IsFull = false;
 				MeasValues_Index = -1;
-	    	}
-	    	else
-	    		MeasValues[MeasValues_Index] = MeasValue2;
-	    }
+			}
+			else
+				MeasValues[MeasValues_Index] = MeasValue2;
+		}
 
-	    MeasValues_Index++;
-	    cnt_Readings = 0;
+		MeasValues_Index++;
+		cnt_Readings = 0;
 
-	    USE_SERIAL.print("# Buffer.IsFull = ");
-	    USE_SERIAL.println(MeasValues_IsFull);
-	    USE_SERIAL.print("# Buffer.Index = ");
-	    USE_SERIAL.println(MeasValues_Index);
+		USE_SERIAL.print("# Buffer.IsFull = ");
+		USE_SERIAL.println(MeasValues_IsFull);
+		USE_SERIAL.print("# Buffer.Index = ");
+		USE_SERIAL.println(MeasValues_Index);
 	}
 
-    SecureCounter++;
-    digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
+	SecureCounter++;
+	digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
 }
 
 void setup()
 {
-  	//serial debugging
+	//serial debugging
 	USE_SERIAL.begin(115200);
 	USE_SERIAL.setDebugOutput(true);
 	delay(500);
@@ -617,8 +617,8 @@ void setup()
 	
 	USE_SERIAL.println("Setting up...");
 
-	pinMode(LED_BUILTIN, OUTPUT);     //initialize the LED_BUILTIN pin as an output
-    digitalWrite(LED_BUILTIN, LOW);   //turn the LED on
+	pinMode(LED_BUILTIN, OUTPUT);	 //initialize the LED_BUILTIN pin as an output
+	digitalWrite(LED_BUILTIN, LOW);   //turn the LED on
 
 	client.setInsecure();
 
@@ -627,155 +627,155 @@ void setup()
 
 
 
-    if (SPIFFS.begin())
-    {
-    	if (SPIFFS.exists("/config.json"))
-    	{
-      	//file exists, reading and loading
+	if (SPIFFS.begin())
+	{
+		if (SPIFFS.exists("/config.json"))
+		{
+		//file exists, reading and loading
 
-    		File configFile = SPIFFS.open("/config.json", "r");
-    		if (configFile)
-    		{
-    			USE_SERIAL.println("opened config file");
-    			size_t size = configFile.size();
-        		//allocate a buffer to store contents of the file.
-    			std::unique_ptr<char[]> buf(new char[size]);
+			File configFile = SPIFFS.open("/config.json", "r");
+			if (configFile)
+			{
+				USE_SERIAL.println("opened config file");
+				size_t size = configFile.size();
+				//allocate a buffer to store contents of the file.
+				std::unique_ptr<char[]> buf(new char[size]);
 
-    			configFile.readBytes(buf.get(), size);
-    			DynamicJsonDocument json(1024);
-    			deserializeJson(json, buf.get());
-    			serializeJson(json,Serial);
+				configFile.readBytes(buf.get(), size);
+				DynamicJsonDocument json(1024);
+				deserializeJson(json, buf.get());
+				serializeJson(json,Serial);
 
-    			JsonVariant jsonSystemName = json["systemName"];
-    			if (!jsonSystemName.isNull())
-    				strcpy(systemName, json["systemName"]);
+				JsonVariant jsonSystemName = json["systemName"];
+				if (!jsonSystemName.isNull())
+					strcpy(systemName, json["systemName"]);
 
-    			JsonVariant jsonTemp1Name = json["temp1Name"];
-    			if (!jsonTemp1Name.isNull())
-    				strcpy(temp1Name, json["temp1Name"]);
+				JsonVariant jsonTemp1Name = json["temp1Name"];
+				if (!jsonTemp1Name.isNull())
+					strcpy(temp1Name, json["temp1Name"]);
 
-    			JsonVariant jsonTemp2Name = json["temp2Name"];
-    			if (!jsonTemp2Name.isNull())
-    				strcpy(temp2Name, json["temp2Name"]);
+				JsonVariant jsonTemp2Name = json["temp2Name"];
+				if (!jsonTemp2Name.isNull())
+					strcpy(temp2Name, json["temp2Name"]);
 
-    			JsonVariant jsonSensorCnt = json["sensorCnt"];
-    			if (!jsonSensorCnt.isNull())
-    				sensorCnt = jsonSensorCnt.as<int>();
+				JsonVariant jsonSensorCnt = json["sensorCnt"];
+				if (!jsonSensorCnt.isNull())
+					sensorCnt = jsonSensorCnt.as<int>();
 
-    			JsonVariant jsonToggleTemps = json["toggleSensors"];
-    			if (!jsonToggleTemps.isNull())
-    				toggleSensors = jsonToggleTemps.as<bool>();
+				JsonVariant jsonToggleTemps = json["toggleSensors"];
+				if (!jsonToggleTemps.isNull())
+					toggleSensors = jsonToggleTemps.as<bool>();
 
-    			JsonVariant jsonPrimaryColor = json["primaryColor"];
-    			if (!jsonPrimaryColor.isNull())
-    				strcpy(primaryColor, json["primaryColor"]);
+				JsonVariant jsonPrimaryColor = json["primaryColor"];
+				if (!jsonPrimaryColor.isNull())
+					strcpy(primaryColor, json["primaryColor"]);
 
-    			JsonVariant jsonNtpServer = json["ntpServer"];
-    			if (!jsonNtpServer.isNull())
-    				strcpy(ntpServer, json["ntpServer"]);
+				JsonVariant jsonNtpServer = json["ntpServer"];
+				if (!jsonNtpServer.isNull())
+					strcpy(ntpServer, json["ntpServer"]);
 
 				USE_SERIAL.println();
-    			USE_SERIAL.print("primaryColor: ");
-    			USE_SERIAL.println(primaryColor);
+				USE_SERIAL.print("primaryColor: ");
+				USE_SERIAL.println(primaryColor);
 
-    			if (strcmp(primaryColor, "#1e87f0") == 0)
-    				colorScheme = 2;
-    			else if (strcmp(primaryColor, "#30a4a1") == 0)
-    				colorScheme = 3;
-    			else if (strcmp(primaryColor, "#325c84") == 0)
-    				colorScheme = 4;
-    			else if (strcmp(primaryColor, "#f08a00") == 0)
-    				colorScheme = 5;
-    			else if (strcmp(primaryColor, "#060d2a") == 0)
-    				colorScheme = 6;
-    			else
-    				colorScheme = 1;
+				if (strcmp(primaryColor, "#1e87f0") == 0)
+					colorScheme = 2;
+				else if (strcmp(primaryColor, "#30a4a1") == 0)
+					colorScheme = 3;
+				else if (strcmp(primaryColor, "#325c84") == 0)
+					colorScheme = 4;
+				else if (strcmp(primaryColor, "#f08a00") == 0)
+					colorScheme = 5;
+				else if (strcmp(primaryColor, "#060d2a") == 0)
+					colorScheme = 6;
+				else
+					colorScheme = 1;
 
-    			USE_SERIAL.print("colorScheme: ");
-    			USE_SERIAL.println(colorScheme);
-    		}
-    		else
+				USE_SERIAL.print("colorScheme: ");
+				USE_SERIAL.println(colorScheme);
+			}
+			else
 				USE_SERIAL.println("failed to open /config.json");
-    	}
-    	else
-    		USE_SERIAL.println("/config.json not found");
-    }
-    else
-    	USE_SERIAL.println("failed to mount FS");
-  	//end read
+		}
+		else
+			USE_SERIAL.println("/config.json not found");
+	}
+	else
+		USE_SERIAL.println("failed to mount FS");
+	//end read
 
-    WiFiManager wifiManager;
-    wifiManager.setCustomHeadElement("<style>button,input[type='button'],input[type='submit']{background-color:#ff2e64;color:#fff}</style>");
+	WiFiManager wifiManager;
+	wifiManager.setCustomHeadElement("<style>button,input[type='button'],input[type='submit']{background-color:#ff2e64;color:#fff}</style>");
 
-    WiFiManagerParameter custom_header("<h3>Temp2IoT Settings</h3>");
+	WiFiManagerParameter custom_header("<h3>Temp2IoT Settings</h3>");
 
-  	//definitinos of custom parameters
+	//definitinos of custom parameters
 	//prepare
-    char char_sensorCnt[2];
-    itoa(sensorCnt, char_sensorCnt, 10);
+	char char_sensorCnt[2];
+	itoa(sensorCnt, char_sensorCnt, 10);
 
-    char char_toggleSensors[6];
-    if (toggleSensors)
-    	strncpy(char_toggleSensors, "true", 6);
-    else
-    	strncpy(char_toggleSensors, "false", 6);
+	char char_toggleSensors[6];
+	if (toggleSensors)
+		strncpy(char_toggleSensors, "true", 6);
+	else
+		strncpy(char_toggleSensors, "false", 6);
 
 	//define
-    WiFiManagerParameter custom_systemName("systemName", "Systemname", systemName, 20);
-    WiFiManagerParameter custom_temp1Name("temp1Name", "Bezeichnung Sensor 1", temp1Name, 20);
-    WiFiManagerParameter custom_temp2Name("temp2Name", "Bezeichnung Sensor 2", temp2Name, 20);
+	WiFiManagerParameter custom_systemName("systemName", "Systemname", systemName, 20);
+	WiFiManagerParameter custom_temp1Name("temp1Name", "Bezeichnung Sensor 1", temp1Name, 20);
+	WiFiManagerParameter custom_temp2Name("temp2Name", "Bezeichnung Sensor 2", temp2Name, 20);
 
-  	//add parameters to wifiManager
-    wifiManager.addParameter(&custom_header);
-    wifiManager.addParameter(&custom_systemName);
-    wifiManager.addParameter(&custom_temp1Name);
-    wifiManager.addParameter(&custom_temp2Name);
+	//add parameters to wifiManager
+	wifiManager.addParameter(&custom_header);
+	wifiManager.addParameter(&custom_systemName);
+	wifiManager.addParameter(&custom_temp1Name);
+	wifiManager.addParameter(&custom_temp2Name);
 
-    delay(500);
+	delay(500);
 
-	  //ToDo: Check cust. ntp server address
-    //configTime(0, 0, "pool.ntp.org", "time.nist.gov");
-    configTime(0, 0, ntpServer, "pool.ntp.org", "time.nist.gov");
-  	setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 0);  // https://github.com/nayarsystems/posix_tz_db 
+	//ToDo: Check cust. ntp server address
+	//configTime(0, 0, "pool.ntp.org", "time.nist.gov");
+	configTime(0, 0, ntpServer, "pool.ntp.org", "time.nist.gov");
+	setenv("TZ", "CET-1CEST,M3.5.0,M10.5.0/3", 0);  // https://github.com/nayarsystems/posix_tz_db 
 
-	  //set config save notify callback
-  	wifiManager.setSaveConfigCallback(saveConfigCallback);
+	//set config save notify callback
+	wifiManager.setSaveConfigCallback(saveConfigCallback);
 
-  	wifiManager.autoConnect("Temp2IoT");
+	wifiManager.autoConnect("Temp2IoT");
 
 
-  	server.on("/", handleRoot);
-  	server.on("/favicon.svg", handleFaviconSvg);
-  	server.on("/format", getFormat);
-  	server.on("/update", getUpdate);
-  	server.on("/reset", getReset);
-  	server.on("/config", getConfig);
-  	server.on("/setup", handleConfig);
-  	server.on("/api", handleApi);
+	server.on("/", handleRoot);
+	server.on("/favicon.svg", handleFaviconSvg);
+	server.on("/format", getFormat);
+	server.on("/update", getUpdate);
+	server.on("/reset", getReset);
+	server.on("/config", getConfig);
+	server.on("/setup", handleConfig);
+	server.on("/api", handleApi);
 
-  	server.begin();
+	server.begin();
 
-  	//USE_SERIAL.print("IP address: ");
-  	//USE_SERIAL.println(WiFi.localIP());
+	//USE_SERIAL.print("IP address: ");
+	//USE_SERIAL.println(WiFi.localIP());
 
 	//read updated parameters
-  	strcpy(systemName, custom_systemName.getValue());
-  	strcpy(temp1Name, custom_temp1Name.getValue());
-  	strcpy(temp2Name, custom_temp2Name.getValue());
+	strcpy(systemName, custom_systemName.getValue());
+	strcpy(temp1Name, custom_temp1Name.getValue());
+	strcpy(temp2Name, custom_temp2Name.getValue());
 
 	//save the custom parameters to FS
-  	if (shouldSaveConfig)
-  		saveConfig();
+	if (shouldSaveConfig)
+		saveConfig();
 
-  	DS18B20.begin();
-  	SecureCounter = 0;
+	DS18B20.begin();
+	SecureCounter = 0;
 
-  	USE_SERIAL.println();
-  	USE_SERIAL.println("HTTP Temp2IoT server started, you can reach the web UI on:");
-  	USE_SERIAL.print("http://");
-  	USE_SERIAL.print(WiFi.localIP());
-  	USE_SERIAL.println("/");
-    digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
+	USE_SERIAL.println();
+	USE_SERIAL.println("HTTP Temp2IoT server started, you can reach the web UI on:");
+	USE_SERIAL.print("http://");
+	USE_SERIAL.print(WiFi.localIP());
+	USE_SERIAL.println("/");
+	digitalWrite(LED_BUILTIN, HIGH);  //turn the LED off
 }
 
 void saveConfig()
@@ -810,14 +810,14 @@ void infoReset()
 {
 	USE_SERIAL.println("Format System");
 
-    //reset Wifi-Setting
+	//reset Wifi-Setting
 	WiFiManager wifiManager;
 	wifiManager.resetSettings();
 
-    //format Flash
+	//format Flash
 	SPIFFS.format();
 
-    //restart
+	//restart
 	ESP.reset();
 }
 
@@ -868,7 +868,7 @@ void updateFirmware()
 
 
 	USE_SERIAL.println("UPDATE:  Register callback events");
-    // Add optional callback notifiers
+	// Add optional callback notifiers
 	ESPhttpUpdate.onStart(update_started);
 	ESPhttpUpdate.onEnd(update_finished);
 	ESPhttpUpdate.onProgress(update_progress);
