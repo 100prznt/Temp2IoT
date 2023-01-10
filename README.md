@@ -35,6 +35,9 @@ Also a USB-micro cable and a USB power supply is required
 
 If the thermometer is used to measure water temperatures, it is essential to use an appropriately classified power supply unit. It is important that the power supply is designed as a safety transformer.
 
+A simple USB power supply that meets these requirements can be found here:
+* [5V USB-Netzteil mit Sicherheitstransformator | 07-314.0](https://shop.stegertrafo.de/5v-usb-netzteil-mit-sicherheitstransformator-07-314-0.html)
+
 <img src="docu/Sitrenn.svg" alt="Temp2IoT wiring" width="180" height="210" />
 Symbol of a short-circuit proof, closed safety transformer 
 
