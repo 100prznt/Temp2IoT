@@ -57,7 +57,7 @@ You can download the compiled Flasher Tool from the GitHub Repository
 
 1. Clone or download the repository
 2. Start the ESP8266Flasher.exe
-3. Select the pre-compiled Temp2IoT binary on the config-tab, find at: `src\Temp2IoT\emp2IoT.ino.d1_mini.bin`
+3. Select the pre-compiled Temp2IoT binary on the config-tab, find at: `src\Temp2IoT\Temp2IoT.ino.d1.bin`
 4. Switch back to the operation-tab and select the right COM-port
 5. Press the Flash-Button
 
