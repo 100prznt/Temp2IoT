@@ -8,7 +8,7 @@
  *
  * C++11
  *
- * Copyright (C) 2022  Elias Ruemmler
+ * Copyright (C) 2023  Elias Ruemmler
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,10 @@
  *
  * @package		Temp2IoT
  * @author		Elias Ruemmler <e.ruemmler@rc-art.de>
- * @copyright	2022 RC-Art Solutions
+ * @copyright	2023 RC-Art Solutions
  * @version		2.3
- * @link		https://github.com/100prznt/Temp2IoT
- * @since		2020-06-17
+ * @link		  https://github.com/100prznt/Temp2IoT
+ * @since		  2020-06-17
  *
  *
  * The architecture of this project is based on the code of @jegade his followercounter.
@@ -41,31 +41,31 @@
  */
 
 
-#include <FS.h>						// this needs to be first, or it all crashes and burns...
+#include <FS.h>						          // this needs to be first, or it all crashes and burns...
 
 #include "Arduino.h"
 #include <ESP8266WiFi.h>
 //#include "JsonStreamingParser.h"	// Json Streaming Parser 		https://github.com/squix78/json-streaming-parser
 
-#include <ESP8266HTTPClient.h>		// Web Download
-#include <ESP8266httpUpdate.h>		// Web Updater
+#include <ESP8266HTTPClient.h>		  // Web Download
+#include <ESP8266httpUpdate.h>		  // Web Updater
 
-#include <ArduinoJson.h>			// ArduinoJson 					https://github.com/bblanchon/ArduinoJson
+#include <ArduinoJson.h>			      // ArduinoJson 				    	https://github.com/bblanchon/ArduinoJson
 
-#include <DNSServer.h>				// Local DNS Server used for redirecting all requests to the configuration portal
-#include <ESP8266WebServer.h>		// Local WebServer used to serve the configuration portal
-#include <WiFiManager.h>			// WifiManager 					https://github.com/tzapu/WiFiManager
+#include <DNSServer.h>				      // Local DNS Server used for redirecting all requests to the configuration portal
+#include <ESP8266WebServer.h>		    // Local WebServer used to serve the configuration portal
+#include <WiFiManager.h>			      // WifiManager 				    	https://github.com/tzapu/WiFiManager
 
 
-#include <NTPClient.h>				// Connect to a NTP Server		https://github.com/arduino-libraries/NTPClient
+#include <NTPClient.h>				      // Connect to a NTP Server	https://github.com/arduino-libraries/NTPClient
 #include <time.h>
 
 #include <Arduino.h>
 
-#include <ESPStringTemplate.h>		// ESPStringTemplate			https://github.com/DaleGia/ESPStringTemplate
+#include <ESPStringTemplate.h>		  // ESPStringTemplate		  	https://github.com/DaleGia/ESPStringTemplate
 
-#include <DallasTemperature.h>		// Maxim Temperature ICs		https://github.com/milesburton/Arduino-Temperature-Control-Library
-#include <OneWire.h>				// 1-Wire library				https://www.pjrc.com/teensy/td_libs_OneWire.html
+#include <DallasTemperature.h>		  // Maxim Temperature ICs		https://github.com/milesburton/Arduino-Temperature-Control-Library
+#include <OneWire.h>				        // 1-Wire library			    	https://www.pjrc.com/teensy/td_libs_OneWire.html
 #include <stdio.h>
 
 
@@ -74,8 +74,7 @@
 #include "favicon.h"
 
 
-#define VERSION "2.3.05-b"
-#define ROTATE 90
+#define VERSION "2.3.06-b"
 #define USE_SERIAL Serial
 #define ONE_WIRE_BUS D3
 
