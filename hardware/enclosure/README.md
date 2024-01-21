@@ -9,8 +9,8 @@ Partner-link from amazon.de
 
 ## STLs
 
-You can find the STL files for the case on PrusaPrinters.org
-* [WeMos D1 mini Enclosure](https://www.prusaprinters.org/de/prints/44083-wemos-d1-mini-enclosure)
+You can find the STL files for the case on Printables.com
+* [WeMos D1 mini Enclosure](https://www.printables.com/de/model/44083-wemos-d1-mini-enclosure)
 
 
 ## Assembly
